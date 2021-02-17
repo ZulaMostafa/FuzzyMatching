@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace SimilarityMatching.Core.MatrixOperations
+namespace FuzztMatching.Core.MatrixOperations
 {
     public static class CellOperations
     {

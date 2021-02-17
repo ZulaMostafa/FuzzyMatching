@@ -1,11 +1,11 @@
-﻿using SimilarityMatching.Core.FeatureMatrixCalculation;
-using SimilarityMatching.Core.MatrixOperations;
+﻿using FuzztMatching.Core.FeatureMatrixCalculation;
+using FuzztMatching.Core.MatrixOperations;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimilarityMatching.SimilarityMatchingAlgorithms
+namespace FuzzyMatching.Algorithms
 {
-    public static class SimilarityMatchingNoPreprocessing
+    public static class FuzzyMatchingNoPreprocessing
     {
         /// <summary>
         /// finds the closest match for a given "sentence" in some "sentenceDataset"

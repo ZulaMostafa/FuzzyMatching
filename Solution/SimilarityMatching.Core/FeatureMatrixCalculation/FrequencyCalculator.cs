@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace SimilarityMatching.Core.FeatureMatrixCalculation
+namespace FuzztMatching.Core.FeatureMatrixCalculation
 {
     public static class FrequencyCalculator
     {

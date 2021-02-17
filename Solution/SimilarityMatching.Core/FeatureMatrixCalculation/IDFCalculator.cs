@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SimilarityMatching.Core.FeatureMatrixCalculation
+namespace FuzztMatching.Core.FeatureMatrixCalculation
 {
     public static class IDFCalculator
     {

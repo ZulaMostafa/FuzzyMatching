@@ -1,8 +1,8 @@
-﻿using SimilarityMatching.Core.FeatureMatrixCalculation;
+﻿using FuzztMatching.Core.FeatureMatrixCalculation;
 using System;
 using Xunit;
 
-namespace SimilarityMatching.Tests.UnitTests
+namespace FuzztMatching.Tests.UnitTests
 {
     public class NGramsCalculatorTest
     {

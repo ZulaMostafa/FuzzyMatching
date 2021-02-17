@@ -1,4 +1,4 @@
-﻿using SimilarityMatching.SimilarityMatchingAlgorithms;
+﻿using FuzzyMatching.Algorithms;
 using System.Collections.Generic;
 
 namespace SimilarityMatching
@@ -19,7 +19,7 @@ namespace SimilarityMatching
             };
 
             // calculate similarity (no preprocessing)
-            var result = SimilarityMatchingNoPreprocessing.GetClosestSentence(sentence, sentenceDataset);
+            var result = FuzzyMatchingNoPreprocessing.GetClosestSentence(sentence, sentenceDataset);
             var closestMatch = result.Item1;
             var index = result.Item2;
             var score = result.Item3;

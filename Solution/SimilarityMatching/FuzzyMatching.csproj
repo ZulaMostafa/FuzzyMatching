@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimilarityMatching.Core\SimilarityMatching.Core.csproj" />
+    <ProjectReference Include="..\SimilarityMatching.Core\FuzzyMatching.Core.csproj" />
   </ItemGroup>
 
 </Project>
