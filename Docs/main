@@ -1,0 +1,19 @@
+######################
+>> No Pre-Processing
+######################
+>> input:
+    - sentece
+    - dataset: sentence list
+
+>> create feature matrix
+    - calculate ngrams for each word
+    - get set(all anagrams in the data given)
+    - calculate TF-IDF matrix
+
+>> calculate similarity
+    - dot product
+        - input sentence feature vector (1xN)
+        - dataset feature matrix (MxN)
+        - parameters
+            - M: length of dataset
+            - N: number of unique anagrams in all given data
