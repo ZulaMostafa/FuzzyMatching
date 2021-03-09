@@ -19,7 +19,7 @@ namespace FuzztMatching.Tests.UnitTests
         [MemberData(nameof(TestNGramsAlgorithmData))]
         public void TestNGramsAlgorithm(string sentence)
         {
-            var result = NGramsCalculator.GetSentenceNGrams(sentence);
+            var result = NGramsCalculator.GetSentenceNGramsAsync(sentence);
             Console.WriteLine(result);
         }
     }

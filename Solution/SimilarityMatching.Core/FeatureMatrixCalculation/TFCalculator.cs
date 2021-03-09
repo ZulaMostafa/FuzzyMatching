@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FuzztMatching.Core.FeatureMatrixCalculation
 {
@@ -14,7 +15,7 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
         /// <param name="sentenceNGramsFrequencies"></param>
         /// <param name="allDataUniqueNGramsVector"></param>
         /// <returns></returns>
-        public static float[] CalculateTFVector(Dictionary<string, int> sentenceNGramsFrequencies, string[] allDataUniqueNGramsVector)
+        public static async Task<float[]> CalculateTFVectorAsync(Dictionary<string, int> sentenceNGramsFrequencies, string[] allDataUniqueNGramsVector)
         {
             var result = new float[allDataUniqueNGramsVector.Length];
             for (var i = 0; i < result.Length; i++)
@@ -29,12 +30,13 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
                     result[i] = 0;
                 }
             }
-            return result;
+            return await Task.FromResult(result);
         }
 
-        public static float[][] CalculateTFVectorBatch(List<Dictionary<string, int>> sentenceDatasetNGramFrequencies, string[] allDataUniqueNGramsVector)
+        public static async Task<float[][]> CalculateTFVectorBatchAsync(Dictionary<string, int>[] sentenceDatasetNGramFrequencies, string[] allDataUniqueNGramsVector)
         {
-            return sentenceDatasetNGramFrequencies.Select(sentenceNGramsFrequencies => CalculateTFVector(sentenceNGramsFrequencies, allDataUniqueNGramsVector)).ToArray();
+            var tasks = sentenceDatasetNGramFrequencies.Select(async sentenceNGramsFrequencies => await CalculateTFVectorAsync(sentenceNGramsFrequencies, allDataUniqueNGramsVector)).ToArray();
+            return await Task.WhenAll(tasks);
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+
 namespace FuzztMatching.Core.MatrixOperations
 {
     public static class DotProductCalculator
@@ -18,17 +21,29 @@ namespace FuzztMatching.Core.MatrixOperations
         }
         private static float GetMultiplicationSum(float[] v1, float[] v2)
         {
-            float result = 0;
-            for (var i = 0; i < v1.Length; i++)
+            // math.net
+
+            Vector<float> vA = Vector<float>.Build.Dense(v1);
+            Vector<float> vB = Vector<float>.Build.Dense(v2);
+            
+            float result2 = vA * vB;
+            return result2;
+            
+            // norml approach 
+            //float result = 0;
+            /*for (var i = 0; i < v1.Length; i++)
             {
                 result += v1[i] * v2[i];
             }
-            return result;
+            return result;*/
         }
 
         private static float GetVectorAbsoluteValue(float[] v)
         {
-            var sum = v.Select(value => value * value).Sum();
+            Vector<float> vA = Vector<float>.Build.Dense(v);
+            vA.PointwiseMultiply(vA);
+            var sum =vA.Sum();
+            //var sum = v.Select(value => value * value).Sum();
             return (float)Math.Sqrt(sum);
         }
     }

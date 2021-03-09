@@ -20,21 +20,21 @@ namespace FuzzyMatching.Algorithms
         {
             // calculate ngrams for each sentence
             var ngramsLength = 3;
-            var inputSentenceNGrams = NGramsCalculator.GetSentenceNGrams(sentence, ngramsLength);
-            var inputSentenceDatasetNGrams = NGramsCalculator.GetSentenceNGramsBatch(sentenceDataset, ngramsLength);
+            var inputSentenceNGrams = NGramsCalculator.GetSentenceNGramsAsync(sentence, ngramsLength).GetAwaiter().GetResult();
+            var inputSentenceDatasetNGrams = NGramsCalculator.GetSentenceNGramsBatchAsync(sentenceDataset, ngramsLength).GetAwaiter().GetResult();
 
             // calculate ngram frequencies
-            var inputSentenceNGramFrequencies = FrequencyCalculator.GetNGramFrequency(inputSentenceNGrams);
-            var inputSentenceDatasetNGramFrequencies = FrequencyCalculator.GetNGramFrequencyBatch(inputSentenceDatasetNGrams);
+            var inputSentenceNGramFrequencies = FrequencyCalculator.GetNGramFrequencyAsync(inputSentenceNGrams).GetAwaiter().GetResult();
+            var inputSentenceDatasetNGramFrequencies = FrequencyCalculator.GetNGramFrequencyBatchAsync(inputSentenceDatasetNGrams).GetAwaiter().GetResult();
             var allSenteceList = inputSentenceDatasetNGrams.Append(inputSentenceNGrams).ToArray();
-            var overallDataNgramFrequencies = FrequencyCalculator.GetOverallNGramFrequency(allSenteceList);
+            var overallDataNgramFrequencies = FrequencyCalculator.GetOverallNGramFrequencyAsync(allSenteceList).GetAwaiter().GetResult();
 
             // get ngrams feature vector
             var allDataUniqueNGramsVector = overallDataNgramFrequencies.Keys.ToArray();
 
             // calculate TF
-            var inputSentenceTFVector = TFCalculator.CalculateTFVector(inputSentenceNGramFrequencies, allDataUniqueNGramsVector);
-            var inputSentenceDatasetTFMatrix = TFCalculator.CalculateTFVectorBatch(inputSentenceDatasetNGramFrequencies, allDataUniqueNGramsVector);
+            var inputSentenceTFVector = TFCalculator.CalculateTFVectorAsync(inputSentenceNGramFrequencies, allDataUniqueNGramsVector).GetAwaiter().GetResult();
+            var inputSentenceDatasetTFMatrix = TFCalculator.CalculateTFVectorBatchAsync(inputSentenceDatasetNGramFrequencies, allDataUniqueNGramsVector).GetAwaiter().GetResult();
 
             // calculate IDF
             int overallDataLength = sentenceDataset.Count + 1;
