@@ -18,6 +18,7 @@ namespace SimilarityMatching
             List<string> sentenceDataset = new List<string>();
             //List<string> listB = new List<string>();
             int counter = 0;
+            reader.ReadLine();
             //while(!reader.EndOfStream)
             while (counter<=25000)
             {
@@ -42,10 +43,13 @@ namespace SimilarityMatching
             var result = FuzzyMatchingNoPreprocessing.GetClosestSentence(sentence, sentenceDataset);
             DateTime end = DateTime.Now;
             TimeSpan ts = (end - start);
-            Console.WriteLine("Elapsed Time for the program is {0} s", ts.Seconds);
+            Console.WriteLine("Elapsed Time for the program is {0} s", ts.TotalSeconds);
             var closestMatch = result.Item1;
+            Console.WriteLine(closestMatch);
             var index = result.Item2;
+            Console.WriteLine(index);
             var score = result.Item3;
+            Console.WriteLine(score);
         }
     }
 }

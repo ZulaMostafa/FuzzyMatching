@@ -19,19 +19,19 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
         public static float[] CalculateIDFVector(string[] allDataUniqueNGramsVector, Dictionary<string, float> overallDataNgramsFrequencies, int overallDataLength)
         {
             var result = new float[allDataUniqueNGramsVector.Length];
-            var allDataUniqueNGramsFrequencyVector = overallDataNgramsFrequencies.Values.ToArray();
+           /* var allDataUniqueNGramsFrequencyVector = overallDataNgramsFrequencies.Values.ToArray();
             Vector<float> result2 = Vector<float>.Build.Dense( allDataUniqueNGramsFrequencyVector);
            
             result2.Multiply(1 / overallDataLength, result2);
-            result2.PointwiseLog();
+            result2.PointwiseLog();*/
             // normal approach
-            // for (var i = 0; i < result.Length; i++)
-            // {
-            //     var ngram = allDataUniqueNGramsVector[i];
-            //     var ngramOverallFrequency = overallDataNgramsFrequencies[ngram];
-            //     result[i] = (float)Math.Log((float)overallDataLength / (float)ngramOverallFrequency);
-            // }
-            return result2.ToArray();
+             for (var i = 0; i < result.Length; i++)
+             {
+                 var ngram = allDataUniqueNGramsVector[i];
+                 var ngramOverallFrequency = overallDataNgramsFrequencies[ngram];
+                 result[i] = (float)Math.Log((float)overallDataLength / (float)ngramOverallFrequency);
+             }
+            return result.ToArray();
         }
     }
 }

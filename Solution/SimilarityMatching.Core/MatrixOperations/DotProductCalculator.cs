@@ -25,8 +25,7 @@ namespace FuzztMatching.Core.MatrixOperations
 
             Vector<float> vA = Vector<float>.Build.Dense(v1);
             Vector<float> vB = Vector<float>.Build.Dense(v2);
-            
-            float result2 = vA * vB;
+            float result2 = vA.DotProduct( vB);
             return result2;
             
             // norml approach 
@@ -40,10 +39,12 @@ namespace FuzztMatching.Core.MatrixOperations
 
         private static float GetVectorAbsoluteValue(float[] v)
         {
-            Vector<float> vA = Vector<float>.Build.Dense(v);
+           /* Vector<float> vA = Vector<float>.Build.Dense(v);
             vA.PointwiseMultiply(vA);
             var sum =vA.Sum();
-            //var sum = v.Select(value => value * value).Sum();
+            Console.WriteLine(sum);*/
+            var sum = v.Select(value => value * value).Sum();
+            //Console.WriteLine(sum2);
             return (float)Math.Sqrt(sum);
         }
     }
