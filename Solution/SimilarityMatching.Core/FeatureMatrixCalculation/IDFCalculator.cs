@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace FuzztMatching.Core.FeatureMatrixCalculation
@@ -19,18 +20,25 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
         public static float[] CalculateIDFVector(string[] allDataUniqueNGramsVector, Dictionary<string, float> overallDataNgramsFrequencies, int overallDataLength)
         {
             var result = new float[allDataUniqueNGramsVector.Length];
-           /* var allDataUniqueNGramsFrequencyVector = overallDataNgramsFrequencies.Values.ToArray();
-            Vector<float> result2 = Vector<float>.Build.Dense( allDataUniqueNGramsFrequencyVector);
-           
-            result2.Multiply(1 / overallDataLength, result2);
-            result2.PointwiseLog();*/
+            /* var allDataUniqueNGramsFrequencyVector = overallDataNgramsFrequencies.Values.ToArray();
+             Vector<float> result2 = Vector<float>.Build.Dense( allDataUniqueNGramsFrequencyVector);
+
+             result2.Multiply(1 / overallDataLength, result2);
+             result2.PointwiseLog();*/
+            
+            Parallel.ForEach(allDataUniqueNGramsVector, (ngram, loopstate, i) =>
+            {  var ngramOverallFrequency = overallDataNgramsFrequencies[ngram];
+                result[i] = (float)Math.Log((float)overallDataLength / (float)ngramOverallFrequency);
+            }
+
+            ) ;
             // normal approach
-             for (var i = 0; i < result.Length; i++)
+             /*for (var i = 0; i < result.Length; i++)
              {
                  var ngram = allDataUniqueNGramsVector[i];
                  var ngramOverallFrequency = overallDataNgramsFrequencies[ngram];
                  result[i] = (float)Math.Log((float)overallDataLength / (float)ngramOverallFrequency);
-             }
+             }*/
             return result.ToArray();
         }
     }

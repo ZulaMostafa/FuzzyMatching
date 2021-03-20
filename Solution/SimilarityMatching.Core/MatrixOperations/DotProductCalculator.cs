@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-
+using System.Threading.Tasks;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
@@ -39,10 +39,11 @@ namespace FuzztMatching.Core.MatrixOperations
 
         private static float GetVectorAbsoluteValue(float[] v)
         {
-           /* Vector<float> vA = Vector<float>.Build.Dense(v);
-            vA.PointwiseMultiply(vA);
-            var sum =vA.Sum();
-            Console.WriteLine(sum);*/
+            /* Vector<float> vA = Vector<float>.Build.Dense(v);
+             vA.PointwiseMultiply(vA);
+             var sum =vA.Sum();
+             Console.WriteLine(sum);*/
+           
             var sum = v.Select(value => value * value).Sum();
             //Console.WriteLine(sum2);
             return (float)Math.Sqrt(sum);

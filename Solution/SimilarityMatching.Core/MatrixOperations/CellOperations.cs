@@ -1,5 +1,7 @@
 ﻿// using System;
+using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading.Tasks;
 //using System.Numerics;
 // using System.Diagnostics;
 // using NumSharp;
@@ -77,10 +79,15 @@ namespace FuzztMatching.Core.MatrixOperations
             // TimeSpan ts = (end - start);
             // Console.WriteLine("Elapsed Time for Math.NET is {0} ms", ts.TotalMilliseconds);
             // Console.WriteLine("----------------");
-            return result;       
+            return result;
 
+            // parallel.foreach approach
 
-           
+            //var result = new float[vectorA.Length];
+
+            //Parallel.ForEach(vectorA,(element,loopstate,i )=> result[i]= element*vectorB[i]);
+
+           // return result;
 
 
             // normal approach
@@ -106,7 +113,16 @@ namespace FuzztMatching.Core.MatrixOperations
 
         public static float[][] MultiplyVectorCellsBatch(float[][] vectorAsList, float[] vectorB)
         {
-            return vectorAsList.Select(vectorA => MultiplyVectorCells(vectorA, vectorB)).ToArray();
+            //ConcurrentBag<float[]> bag = new ConcurrentBag<float[]>();
+            var task = vectorAsList.AsParallel().Select( vectorA => MultiplyVectorCells(vectorA,vectorB));
+            /*var task = from vectorA in vectorAsList.AsParallel().AsOrdered()
+                       select vectorA;
+            
+            task.ForAll(vectorA => bag.Add(MultiplyVectorCells(vectorA, vectorB)));
+            return bag.ToArray();*/
+            return task.ToArray();
+
+            // return vectorAsList.Select(vectorA => MultiplyVectorCells(vectorA, vectorB)).ToArray();
 
         }
     }

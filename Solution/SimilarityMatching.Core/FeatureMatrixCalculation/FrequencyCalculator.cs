@@ -6,7 +6,7 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
 {
     public static class FrequencyCalculator
     {
-        public static async Task<Dictionary<string, int>> GetNGramFrequencyAsync(string[] sentenceNGrams)
+        public static  Dictionary<string, int> GetNGramFrequencyAsync(string[] sentenceNGrams)
         {
             var result = new Dictionary<string, int>();
             foreach (var ngram in sentenceNGrams)
@@ -20,13 +20,15 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
                     result[ngram] = 1;
                 }
             }
-            return await Task.FromResult(result);
+            return result;
+            //return await Task.FromResult(result);
         }
 
-        public static async Task<Dictionary<string, int>[]> GetNGramFrequencyBatchAsync(string[][] sentenceDatasetNGrams)
+        public static  Dictionary<string, int>[] GetNGramFrequencyBatchAsync(string[][] sentenceDatasetNGrams)
         {
-            var tasks = sentenceDatasetNGrams.Select( async sentenceNGrams => await GetNGramFrequencyAsync(sentenceNGrams)).ToList();
-            return await Task.WhenAll(tasks);
+            var tasks = sentenceDatasetNGrams.AsParallel().Select(  sentenceNGrams =>  GetNGramFrequencyAsync(sentenceNGrams)).ToArray();
+            return tasks;
+            //return await Task.WhenAll(tasks);
         }
 
         public static async Task<Dictionary<string, float>> GetOverallNGramFrequencyAsync(string[][] sentenceListNGrams)
@@ -51,6 +53,7 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
             await Task.WhenAll(tasks);
 
             return await Task.FromResult(result);
+            
             /*foreach (var sentenceNGrams in sentenceListNGrams)
             {
                 foreach (var ngram in sentenceNGrams)

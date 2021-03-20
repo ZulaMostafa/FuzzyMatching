@@ -20,7 +20,7 @@ namespace SimilarityMatching
             int counter = 0;
             reader.ReadLine();
             //while(!reader.EndOfStream)
-            while (counter<=25000)
+            while (counter<=50000)
             {
                 var line = reader.ReadLine();
                 var values = line.Split(',');
