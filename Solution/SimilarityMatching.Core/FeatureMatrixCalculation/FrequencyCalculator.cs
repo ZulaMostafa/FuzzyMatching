@@ -6,6 +6,8 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
 {
     public static class FrequencyCalculator
     {
+        
+
         public static  Dictionary<string, int> GetNGramFrequencyAsync(string[] sentenceNGrams)
         {
             var result = new Dictionary<string, int>();
@@ -20,22 +22,46 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
                     result[ngram] = 1;
                 }
             }
+
             return result;
-            //return await Task.FromResult(result);
+            
         }
 
         public static  Dictionary<string, int>[] GetNGramFrequencyBatchAsync(string[][] sentenceDatasetNGrams)
         {
             var tasks = sentenceDatasetNGrams.AsParallel().Select(  sentenceNGrams =>  GetNGramFrequencyAsync(sentenceNGrams)).ToArray();
             return tasks;
-            //return await Task.WhenAll(tasks);
+          
         }
-
-        public static async Task<Dictionary<string, float>> GetOverallNGramFrequencyAsync(string[][] sentenceListNGrams)
+      
+       
+        public static  Dictionary<string, float> GetOverallNGramFrequencyAsync(string[][] sentenceListNGrams)
         {
-            var result = new Dictionary<string, float>();
 
-            var tasks = sentenceListNGrams.Select( async sentenceNGrams =>
+             var result = new Dictionary<string, float>();
+            sentenceListNGrams.AsParallel().ForAll( sentenceNGrams =>
+            {
+                foreach(var ngram in sentenceNGrams)
+                 {
+                     if (result.ContainsKey(ngram))
+                     {
+                        lock (result)
+                        {
+                            result[ngram] += 1;
+                        }
+                     }
+                     else
+                     {
+                        lock (result)
+                        {
+                            result[ngram] = 1;
+                        }
+                     }
+                 }
+            });
+
+            return result;
+            /*var tasks = sentenceListNGrams.Select( async sentenceNGrams =>
            {
                var task = sentenceNGrams.Select(async ngram =>
               {
@@ -52,7 +78,7 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
            });
             await Task.WhenAll(tasks);
 
-            return await Task.FromResult(result);
+            return await Task.FromResult(result);*/
             
             /*foreach (var sentenceNGrams in sentenceListNGrams)
             {

@@ -10,7 +10,7 @@ namespace FuzztMatching.Core.MatrixOperations
     {
         public static float[] CalculateDotProduct(float[] vector, float[][] matrix)
         {
-            return matrix.Select(row => CalculateDotProduct(vector, row)).ToArray();
+            return matrix.AsParallel().Select(row => CalculateDotProduct(vector, row)).ToArray();
         }
         private static float CalculateDotProduct(float[] v1, float[] v2)
         {
@@ -39,13 +39,8 @@ namespace FuzztMatching.Core.MatrixOperations
 
         private static float GetVectorAbsoluteValue(float[] v)
         {
-            /* Vector<float> vA = Vector<float>.Build.Dense(v);
-             vA.PointwiseMultiply(vA);
-             var sum =vA.Sum();
-             Console.WriteLine(sum);*/
-           
+   
             var sum = v.Select(value => value * value).Sum();
-            //Console.WriteLine(sum2);
             return (float)Math.Sqrt(sum);
         }
     }

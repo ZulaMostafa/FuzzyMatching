@@ -30,15 +30,17 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
                     result[i] = 0;
                 }
             }
-            return result.ToArray();
-            //return await Task.FromResult(result);
+
+         
+
+            return result;
+          
         }
 
         public static  float[][] CalculateTFVectorBatchAsync(Dictionary<string, int>[] sentenceDatasetNGramFrequencies, string[] allDataUniqueNGramsVector)
         {
-            var tasks = sentenceDatasetNGramFrequencies.AsParallel().Select( sentenceNGramsFrequencies =>  CalculateTFVectorAsync(sentenceNGramsFrequencies, allDataUniqueNGramsVector)).ToArray();
-            return tasks;
-           // return await Task.WhenAll(tasks);
+            return sentenceDatasetNGramFrequencies.AsParallel().Select( sentenceNGramsFrequencies =>  CalculateTFVectorAsync(sentenceNGramsFrequencies, allDataUniqueNGramsVector)).ToArray();
+            
         }
     }
 }

@@ -34,7 +34,7 @@ namespace FuzzyMatching.Algorithms
             //start = d;
             var inputSentenceDatasetNGramFrequencies = FrequencyCalculator.GetNGramFrequencyBatchAsync(inputSentenceDatasetNGrams);//.GetAwaiter().GetResult();
             var allSenteceList = inputSentenceDatasetNGrams.Append(inputSentenceNGrams).ToArray();
-            var overallDataNgramFrequencies = FrequencyCalculator.GetOverallNGramFrequencyAsync(allSenteceList).GetAwaiter().GetResult();
+            var overallDataNgramFrequencies = FrequencyCalculator.GetOverallNGramFrequencyAsync(allSenteceList);//.GetAwaiter().GetResult();
             //end = d;
             //ts = (end - start);
            // Console.WriteLine("Elapsed Time for the ngram frequencies is {0} ms", ts.Milliseconds);
