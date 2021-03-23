@@ -21,7 +21,7 @@ namespace FuzztMatching.Tests.E2ETests
             };
 
             // calculate similarity (no preprocessing)
-            var result = FuzzyMatchingNoPreprocessing.GetClosestSentence(sentence, sentenceDataset);
+            var result = FuzzyMatching.Algorithms.FuzzyMatching.GetClosestSentence(sentence, sentenceDataset);
             var closestMatch = result.Item1;
             var index = result.Item2;
             var score = result.Item3;

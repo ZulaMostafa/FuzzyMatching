@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzyMatching.Core", "Simil
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzyMatching.Tests", "SimilarityMatching.Tests\FuzzyMatching.Tests.csproj", "{94B74996-E721-4FB3-BF1F-4B0F8FF3611A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuzzyMatching.Preprocessing.Core", "FuzzyMatching.Preprocessing.Core\FuzzyMatching.Preprocessing.Core.csproj", "{51EE1BD6-4165-4EFE-BA86-8C2689F2966E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuzzyMatching.RunTime.Core", "FuzzyMatching.RunTime.Core\FuzzyMatching.RunTime.Core.csproj", "{F561349D-FF59-42C9-A844-F8CDA5A274B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{94B74996-E721-4FB3-BF1F-4B0F8FF3611A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94B74996-E721-4FB3-BF1F-4B0F8FF3611A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94B74996-E721-4FB3-BF1F-4B0F8FF3611A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51EE1BD6-4165-4EFE-BA86-8C2689F2966E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51EE1BD6-4165-4EFE-BA86-8C2689F2966E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51EE1BD6-4165-4EFE-BA86-8C2689F2966E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51EE1BD6-4165-4EFE-BA86-8C2689F2966E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F561349D-FF59-42C9-A844-F8CDA5A274B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F561349D-FF59-42C9-A844-F8CDA5A274B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F561349D-FF59-42C9-A844-F8CDA5A274B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F561349D-FF59-42C9-A844-F8CDA5A274B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

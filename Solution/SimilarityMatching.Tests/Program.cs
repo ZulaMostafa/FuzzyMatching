@@ -43,7 +43,7 @@ namespace SimilarityMatching
 
                 // calculate similarity (no preprocessing)
                 DateTime start = DateTime.Now;
-                var result = FuzzyMatchingNoPreprocessing.GetClosestSentence(sentence, sentenceDataset);
+                var result = FuzzyMatching.Algorithms.FuzzyMatching.GetClosestSentence(sentence, sentenceDataset);
                 DateTime end = DateTime.Now;
                 TimeSpan ts = (end - start);
                 Console.WriteLine("Elapsed Time for the program with size {0} is {1} s",size, ts.TotalSeconds);
