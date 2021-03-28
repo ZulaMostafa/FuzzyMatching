@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FuzztMatching.Core.FeatureMatrixCalculation
+namespace FuzztMatching.FeatureMatrixCalculation
 {
     public static class TFCalculator
     {

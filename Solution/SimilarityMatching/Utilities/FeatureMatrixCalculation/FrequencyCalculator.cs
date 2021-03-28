@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FuzztMatching.Core.FeatureMatrixCalculation
+namespace FuzztMatching.FeatureMatrixCalculation
 {
     public static class FrequencyCalculator
     {
@@ -35,11 +35,11 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
         }
       
        
-        public static  Dictionary<string, float> GetOverallNGramFrequencyAsync(string[][] sentenceListNGrams)
+        public static async Task<Dictionary<string, int>> GetOverallNGramFrequencyAsync(string[][] sentenceListNGrams)
         {
 
-             var result = new Dictionary<string, float>();
-            sentenceListNGrams.AsParallel().ForAll( sentenceNGrams =>
+             var result = new Dictionary<string, int>();
+           /* sentenceListNGrams.AsParallel().ForAll( sentenceNGrams =>
             {
                 foreach(var ngram in sentenceNGrams)
                  {
@@ -60,8 +60,8 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
                  }
             });
 
-            return result;
-            /*var tasks = sentenceListNGrams.Select( async sentenceNGrams =>
+            return result;*/
+            var tasks = sentenceListNGrams.Select( async sentenceNGrams =>
            {
                var task = sentenceNGrams.Select(async ngram =>
               {
@@ -78,9 +78,9 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
            });
             await Task.WhenAll(tasks);
 
-            return await Task.FromResult(result);*/
+            return await Task.FromResult(result);
             
-            /*foreach (var sentenceNGrams in sentenceListNGrams)
+           /* foreach (var sentenceNGrams in sentenceListNGrams)
             {
                 foreach (var ngram in sentenceNGrams)
                 {

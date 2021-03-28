@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MathNet.Numerics.LinearAlgebra;
 
-namespace FuzztMatching.Core.FeatureMatrixCalculation
+namespace FuzztMatching.FeatureMatrixCalculation
 {
     public static class IDFCalculator
     {
@@ -17,20 +17,24 @@ namespace FuzztMatching.Core.FeatureMatrixCalculation
         /// <param name="sentenceNgrams"></param>
         /// <param name="datasetNgramsFrequencies"></param>
         /// <returns></returns>
-        public static float[] CalculateIDFVector(string[] allDataUniqueNGramsVector, Dictionary<string, float> overallDataNgramsFrequencies, int overallDataLength)
+        public static float[] CalculateIDFVector(string[] allDataUniqueNGramsVector, Dictionary<string, int> overallDataNgramsFrequencies, int overallDataLength)
         {
             var result = new float[allDataUniqueNGramsVector.Length];
             
 
-            result = allDataUniqueNGramsVector.AsParallel().Select(ngram => (float)Math.Log((float)overallDataLength / (float)overallDataNgramsFrequencies[ngram])).ToArray();
+            //result = allDataUniqueNGramsVector.AsParallel().Select(ngram => (float)Math.Log((float)overallDataLength / (float)overallDataNgramsFrequencies[ngram])).ToArray();
            
             // normal approach
-             /*for (var i = 0; i < result.Length; i++)
+             for (var i = 0; i < result.Length; i++)
              {
                  var ngram = allDataUniqueNGramsVector[i];
-                 var ngramOverallFrequency = overallDataNgramsFrequencies[ngram];
-                 result[i] = (float)Math.Log((float)overallDataLength / (float)ngramOverallFrequency);
-             }*/
+                if (overallDataNgramsFrequencies.ContainsKey(ngram))
+                {
+                    var ngramOverallFrequency = overallDataNgramsFrequencies[ngram];
+                    result[i] = (float)Math.Log((float)overallDataLength / (float)ngramOverallFrequency);
+                }
+               
+             }
             return result;
         }
     }

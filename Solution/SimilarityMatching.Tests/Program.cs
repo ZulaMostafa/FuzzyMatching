@@ -11,7 +11,7 @@ namespace SimilarityMatching
         static void Main(string[] args)
         {
             // get test data
-            string sentence = "I want a transport for london";
+        /*    string sentence = "I want a transport for london";
             int[] sizes = new int[7] { 10, 100, 1000, 10000, 25000, 50000, 100000 };
             var reader = new StreamReader(File.OpenRead(@"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching\largeDataset.csv"));
             Console.WriteLine("Dataset Loaded !!");
@@ -43,7 +43,7 @@ namespace SimilarityMatching
 
                 // calculate similarity (no preprocessing)
                 DateTime start = DateTime.Now;
-                var result = FuzzyMatching.Algorithms.FuzzyMatching.GetClosestSentence(sentence, sentenceDataset);
+                var result =  GetClosestSentence(sentence, sentenceDataset);
                 DateTime end = DateTime.Now;
                 TimeSpan ts = (end - start);
                 Console.WriteLine("Elapsed Time for the program with size {0} is {1} s",size, ts.TotalSeconds);
@@ -52,8 +52,8 @@ namespace SimilarityMatching
                 var index = result.Item2;
                 Console.WriteLine(index);
                 var score = result.Item3;
-                Console.WriteLine(score);
+                Console.WriteLine(score);*/
             }
         }
     }
-}
+

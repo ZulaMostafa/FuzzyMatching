@@ -1,5 +1,5 @@
-﻿using FuzztMatching.Core.FeatureMatrixCalculation;
-using FuzztMatching.Core.MatrixOperations;
+﻿using FuzztMatching.FeatureMatrixCalculation;
+using FuzztMatching.MatrixOperations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,15 +9,19 @@ namespace FuzzyMatching.Algorithms
 {
     public class FuzzyMatching
     {
+        
         private float [][] PreprocessedMatrix;
+        private float [] ScalarValues;
+        private string [] UniqueNgrams;
+        private float[] IDFVector;
         private List<string> sentenceDataset = new List<string>();
         public FuzzyMatching(int size, string path)
         {
             // do the preprocessing phase
-            PreprocessedMatrix = CreateFeatureMatrix(size, path);
+            (PreprocessedMatrix, ScalarValues,IDFVector, UniqueNgrams) = CreateFeatureMatrix(size, path);
         }
 
-        private float [] [] CreateFeatureMatrix(int size, string path)
+        private( float [] [],float [],float [],string []) CreateFeatureMatrix(int size, string path)
         {
             // load data set
             loadDataset(size, path);
@@ -28,7 +32,7 @@ namespace FuzzyMatching.Algorithms
 
         private void loadDataset (int size,string path)
         {
-            var reader = new StreamReader(File.OpenRead(@path));
+            var reader = new StreamReader(File.OpenRead(path));
             reader.ReadLine();
             for (int i=0; i<size;i++)
             {
@@ -44,8 +48,29 @@ namespace FuzzyMatching.Algorithms
             var inputSentenceNGrams = NGramsCalculator.GetSentenceNGramsAsync(sentence, ngramsLength);
             // calculate ngrams frequencies 
             var inputSentenceNGramFrequencies = FrequencyCalculator.GetNGramFrequencyAsync(inputSentenceNGrams);
-            // match string, score, index
+           // var inputSentenceUniqueNGramsVector = inputSentenceNGramFrequencies.Keys.ToArray();
+            // calculate TF vector
+           // var inputSentenceTFVector = TFCalculator.CalculateTFVectorAsync(inputSentenceNGramFrequencies, inputSentenceUniqueNGramsVector);
+            var inputSentenceTFVectorDataset = TFCalculator.CalculateTFVectorAsync(inputSentenceNGramFrequencies, UniqueNgrams);
 
+            // calculate TF-IDF vector
+         
+            var inputSentenceTFIDFVectorDataset = CellOperations.MultiplyVectorCells(inputSentenceTFVectorDataset, IDFVector);
+
+            // get absolute value
+            var inputSentenceAbsoluteValue = DotProductCalculator.GetVectorAbsoluteValue(inputSentenceTFIDFVectorDataset);
+
+            // calculate similarity
+
+            var similarityValues = DotProductCalculator.CalculateDotProduct(inputSentenceTFIDFVectorDataset, inputSentenceAbsoluteValue, PreprocessedMatrix,ScalarValues);
+
+            // match string, score, index
+            // get most matching one
+            float minValue = similarityValues.Min();
+            int minIndex = similarityValues.ToList().IndexOf(minValue);
+
+            // return
+            return (sentenceDataset[minIndex],minValue, minIndex);
         }
     }
 }

@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 // using NumSharp;
 // using PandasNet.Impl;
 // using PandasNet;
+
 using MathNet.Numerics.LinearAlgebra;
 // using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace FuzztMatching.Core.MatrixOperations
+namespace FuzztMatching.MatrixOperations
 {
     
     public static class CellOperations

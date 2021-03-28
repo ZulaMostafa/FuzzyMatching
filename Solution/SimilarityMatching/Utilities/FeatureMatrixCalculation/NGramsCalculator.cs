@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Concurrent;
 
-namespace FuzztMatching.Core.FeatureMatrixCalculation
+namespace FuzztMatching.FeatureMatrixCalculation
 {
     public static class NGramsCalculator
     {

@@ -1,16 +1,14 @@
 ﻿
-using System;
-using FuzztMatching.Core;
 using System.Collections.Generic;
 using System.Linq;
-using FuzztMatching.Core.FeatureMatrixCalculation;
-using FuzztMatching.Core.MatrixOperations;
+using FuzztMatching.FeatureMatrixCalculation;
+using FuzztMatching.MatrixOperations;
 
 namespace FuzzyMatching.Preprocessor
 {
     public static class Preprocessor
     {
-        public static float[][] CreateFeatureMatrix(List<string> dataset)
+        public static (float[][],float [],float [],string[]) CreateFeatureMatrix(List<string> dataset)
         {
             // calculate ngrams for each sentence
             var ngramsLength = 3;
@@ -19,7 +17,7 @@ namespace FuzzyMatching.Preprocessor
             // calculate ngram frequencies
             var inputSentenceDatasetNGramFrequencies = FrequencyCalculator.GetNGramFrequencyBatchAsync(inputSentenceDatasetNGrams);//.GetAwaiter().GetResult();
             //var allSenteceList = inputSentenceDatasetNGrams.Append(inputSentenceNGrams).ToArray();
-            var overallDataNgramFrequencies = FrequencyCalculator.GetOverallNGramFrequencyAsync(inputSentenceDatasetNGrams);//.GetAwaiter().GetResult();
+            var overallDataNgramFrequencies = FrequencyCalculator.GetOverallNGramFrequencyAsync(inputSentenceDatasetNGrams).GetAwaiter().GetResult();
            
             // get ngrams feature vector
             var allDataUniqueNGramsVector = overallDataNgramFrequencies.Keys.ToArray();
@@ -30,13 +28,15 @@ namespace FuzzyMatching.Preprocessor
 
             // calculate IDF
             int overallDataLength = dataset.Count + 1;
-            //start = d;
             var overallDataIDFVector = IDFCalculator.CalculateIDFVector(allDataUniqueNGramsVector, overallDataNgramFrequencies, overallDataLength);
            
             // calculate TF-IDF
             var inputSentenceDatasetTFIDFMatrix = CellOperations.MultiplyVectorCellsBatch(inputSentenceDatasetTFMatrix, overallDataIDFVector);
 
-            return inputSentenceDatasetTFIDFMatrix;
+            // get scalar values
+            var inputSentenceDataseetAbsoluteValues = DotProductCalculator.CalculateVectorAbsoluteValueBatch(inputSentenceDatasetTFIDFMatrix);
+
+            return (inputSentenceDatasetTFIDFMatrix,inputSentenceDataseetAbsoluteValues,overallDataIDFVector,allDataUniqueNGramsVector);
         }
     }
 }

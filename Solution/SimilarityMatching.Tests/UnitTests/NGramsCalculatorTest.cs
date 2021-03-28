@@ -1,4 +1,4 @@
-﻿using FuzztMatching.Core.FeatureMatrixCalculation;
+﻿using FuzztMatching.FeatureMatrixCalculation;
 using System;
 using Xunit;
 

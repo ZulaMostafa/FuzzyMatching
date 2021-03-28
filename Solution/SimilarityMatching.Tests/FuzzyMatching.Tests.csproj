@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimilarityMatching.Core\FuzzyMatching.Core.csproj" />
+    
     <ProjectReference Include="..\SimilarityMatching\FuzzyMatching.csproj" />
   </ItemGroup>
 

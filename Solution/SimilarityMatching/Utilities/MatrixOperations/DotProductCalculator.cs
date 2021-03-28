@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace FuzztMatching.Core.MatrixOperations
+namespace FuzztMatching.MatrixOperations
 {
     public static class DotProductCalculator
     {
@@ -12,10 +12,24 @@ namespace FuzztMatching.Core.MatrixOperations
         {
             return matrix.AsParallel().Select(row => CalculateDotProduct(vector, row)).ToArray();
         }
-        private static float CalculateDotProduct(float[] v1, float[] v2)
+        public static float[] CalculateDotProduct(float[] vector, float vectorAbs, float[][] matrix, float [] matrixAbs)
+        {
+            return matrix.AsParallel().Select((row,index) => CalculateDotProduct(vector, row,vectorAbs,matrixAbs[index])).ToArray();
+        }
+       
+        public static float [] CalculateVectorAbsoluteValueBatch (float [][] matrix)
+        {
+            return matrix.AsParallel().Select(row => GetVectorAbsoluteValue(row)).ToArray();
+        }
+        private static float CalculateDotProduct(float[] v1,  float[] v2)
         {
             var v1Abs = GetVectorAbsoluteValue(v1);
             var v2Abs = GetVectorAbsoluteValue(v2);
+            var multiplicationSum = GetMultiplicationSum(v1, v2);
+            return (v1Abs * v2Abs) / multiplicationSum;
+        }
+        private static float CalculateDotProduct(float[] v1, float[] v2, float v1Abs, float v2Abs)
+        {
             var multiplicationSum = GetMultiplicationSum(v1, v2);
             return (v1Abs * v2Abs) / multiplicationSum;
         }
@@ -37,7 +51,7 @@ namespace FuzztMatching.Core.MatrixOperations
             return result;*/
         }
 
-        private static float GetVectorAbsoluteValue(float[] v)
+        public static float GetVectorAbsoluteValue(float[] v)
         {
    
             var sum = v.Select(value => value * value).Sum();
