@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FuzztMatching.FeatureMatrixCalculation
+namespace FuzzyMatching.FeatureMatrixCalculation
 {
     public static class FrequencyCalculator
     {
@@ -29,8 +29,8 @@ namespace FuzztMatching.FeatureMatrixCalculation
 
         public static  Dictionary<string, int>[] GetNGramFrequencyBatchAsync(string[][] sentenceDatasetNGrams)
         {
-            var tasks = sentenceDatasetNGrams.AsParallel().Select(  sentenceNGrams =>  GetNGramFrequencyAsync(sentenceNGrams)).ToArray();
-            return tasks;
+            return sentenceDatasetNGrams.AsParallel().Select(  sentenceNGrams =>  GetNGramFrequencyAsync(sentenceNGrams)).ToArray();
+            
           
         }
       

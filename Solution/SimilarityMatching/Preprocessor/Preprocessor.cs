@@ -1,8 +1,8 @@
 ﻿
 using System.Collections.Generic;
 using System.Linq;
-using FuzztMatching.FeatureMatrixCalculation;
-using FuzztMatching.MatrixOperations;
+using FuzzyMatching.FeatureMatrixCalculation;
+using FuzzyMatching.MatrixOperations;
 
 namespace FuzzyMatching.Preprocessor
 {

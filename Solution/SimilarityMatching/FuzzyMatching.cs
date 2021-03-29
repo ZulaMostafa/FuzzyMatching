@@ -1,5 +1,5 @@
-﻿using FuzztMatching.FeatureMatrixCalculation;
-using FuzztMatching.MatrixOperations;
+﻿using FuzzyMatching.FeatureMatrixCalculation;
+using FuzzyMatching.MatrixOperations;
 using System;
 using System.Collections.Generic;
 using System.IO;

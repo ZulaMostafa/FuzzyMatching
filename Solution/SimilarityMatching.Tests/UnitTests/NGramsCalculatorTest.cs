@@ -1,8 +1,8 @@
-﻿using FuzztMatching.FeatureMatrixCalculation;
+﻿using FuzzyMatching.FeatureMatrixCalculation;
 using System;
 using Xunit;
 
-namespace FuzztMatching.Tests.UnitTests
+namespace FuzzyMatching.Tests.UnitTests
 {
     public class NGramsCalculatorTest
     {

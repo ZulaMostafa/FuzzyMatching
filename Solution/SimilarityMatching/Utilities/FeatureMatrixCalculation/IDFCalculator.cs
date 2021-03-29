@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MathNet.Numerics.LinearAlgebra;
 
-namespace FuzztMatching.FeatureMatrixCalculation
+namespace FuzzyMatching.FeatureMatrixCalculation
 {
     public static class IDFCalculator
     {
@@ -22,10 +22,10 @@ namespace FuzztMatching.FeatureMatrixCalculation
             var result = new float[allDataUniqueNGramsVector.Length];
             
 
-            //result = allDataUniqueNGramsVector.AsParallel().Select(ngram => (float)Math.Log((float)overallDataLength / (float)overallDataNgramsFrequencies[ngram])).ToArray();
+            result = allDataUniqueNGramsVector.AsParallel().Select(ngram => (float)Math.Log((float)overallDataLength / (float)overallDataNgramsFrequencies[ngram])).ToArray();
            
             // normal approach
-             for (var i = 0; i < result.Length; i++)
+             /*for (var i = 0; i < result.Length; i++)
              {
                  var ngram = allDataUniqueNGramsVector[i];
                 if (overallDataNgramsFrequencies.ContainsKey(ngram))
@@ -34,7 +34,7 @@ namespace FuzztMatching.FeatureMatrixCalculation
                     result[i] = (float)Math.Log((float)overallDataLength / (float)ngramOverallFrequency);
                 }
                
-             }
+             }*/
             return result;
         }
     }

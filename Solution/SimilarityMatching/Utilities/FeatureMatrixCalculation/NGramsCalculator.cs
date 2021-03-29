@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Concurrent;
 
-namespace FuzztMatching.FeatureMatrixCalculation
+namespace FuzzyMatching.FeatureMatrixCalculation
 {
     public static class NGramsCalculator
     {
@@ -35,10 +35,10 @@ namespace FuzztMatching.FeatureMatrixCalculation
         {
             
            
-            var tasks =sentenceList.AsParallel().Select(  sentence =>   GetSentenceNGramsAsync(sentence, ngramsLength)).ToArray();
+            return sentenceList.AsParallel().Select(  sentence =>   GetSentenceNGramsAsync(sentence, ngramsLength)).ToArray();
             
 
-            return tasks;
+            
            
         }
 
