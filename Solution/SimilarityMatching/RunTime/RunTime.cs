@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace FuzzyMatching.RunTime
 {
@@ -33,9 +32,9 @@ namespace FuzzyMatching.RunTime
                // foreach (var size in sizes)
                 {
                     Console.WriteLine("Hello World!");
-                    var matcher = new Algorithms.FuzzyMatching(size, @"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching\LargeDataset.csv");
+                    //var matcher = new Algorithms.FuzzyMatching(size, @"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching\LargeDataset.csv");
                     DateTime start = DateTime.Now;
-                    var result = GetClosestSentence("I want a transport for london",25000);
+                    var result = GetClosestSentence(utterance,25000);
                    // var result = matcher.MatchSentence(utterance);
                     DateTime end = DateTime.Now;
                     TimeSpan ts = (end - start);

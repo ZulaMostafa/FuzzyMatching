@@ -23,6 +23,7 @@ namespace FuzzyMatching.Tests.E2ETests
             // calculate similarity (no preprocessing)
             var result = RunTime.RunTime.GetClosestSentence(sentence, 25000);
             var closestMatch = result.Item1;
+            // expected output: barca take record as robson celebrates birthday in
             Console.WriteLine(closestMatch);
             var index = result.Item2;
             Console.WriteLine(index);

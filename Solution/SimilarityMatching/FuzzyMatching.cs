@@ -1,7 +1,6 @@
 ﻿using FuzzyMatching.FeatureMatrixCalculation;
 using FuzzyMatching.MatrixOperations;
 using FuzzyMatching.ReadWriteOperations;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,8 +10,7 @@ namespace FuzzyMatching.Algorithms
     public class FuzzyMatching
     {
         
-        private float [][] PreprocessedMatrix;
-        private bool writeArrays = true;
+        private float [][] PreprocessedMatrix;       
         private float [] ScalarValues;
         private string [] UniqueNgrams;
         private float[] IDFVector;
@@ -24,7 +22,7 @@ namespace FuzzyMatching.Algorithms
             if (File.Exists(@"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching\IDF"))
             {
                 ReadArraysFromFiles();
-                loadDataset(size, path);
+                
             }
             else
             {
@@ -61,6 +59,7 @@ namespace FuzzyMatching.Algorithms
             WriteArrays.WriteArrayInFile(IDFVector, "IDF",path);
             WriteArrays.WriteArrayInFile(PreprocessedMatrix, "FeatureMatrix",path);
             WriteArrays.WriteArrayInFile(UniqueNgrams, "NGrams",path);
+            WriteArrays.WriteArrayInFile(sentenceDataset.ToArray(), "Dataset",path);
             
         }
 
@@ -75,6 +74,7 @@ namespace FuzzyMatching.Algorithms
             ScalarValues = ReadFiles.ReadFloatArrayFromFile("ScalarValues",path);
             IDFVector = ReadFiles.ReadFloatArrayFromFile("IDF",path);
             UniqueNgrams= ReadFiles.ReadStringArrayFromFile("NGrams",path);
+            sentenceDataset= ReadFiles.ReadStringArrayFromFile("Dataset", path).ToList();
 
         }
 
