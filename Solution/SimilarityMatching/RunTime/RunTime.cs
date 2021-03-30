@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace FuzzyMatching.RunTime
 {
@@ -8,6 +9,18 @@ namespace FuzzyMatching.RunTime
     {
         static void Main(string[] args)
         {
+            var floatArray1 = new float[] { 123.45f, 123f, 45f, 1.2f, 34.5f };
+
+            // create a byte array and copy the floats into it...
+            var byteArray = new byte[floatArray1.Length * 4];
+            Buffer.BlockCopy(floatArray1, 0, byteArray, 0, byteArray.Length);
+
+            // create a second float array and copy the bytes into it...
+            var floatArray2 = new float[byteArray.Length / 4];
+            Buffer.BlockCopy(byteArray, 0, floatArray2, 0, byteArray.Length);
+
+            // do we have the same sequence of floats that we started with?
+            Console.WriteLine(floatArray1.SequenceEqual(floatArray2));
             int[] sizes = new int[7] { 10, 100, 1000, 10000, 25000, 50000, 100000 };
             var readerUtterance = new StreamReader(File.OpenRead(@"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching\largeDataset.csv"));
             readerUtterance.ReadLine();
@@ -33,8 +46,8 @@ namespace FuzzyMatching.RunTime
                     Console.WriteLine("Hello World!");
                     var matcher = new Algorithms.FuzzyMatching(size, @"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching\LargeDataset.csv");
                     DateTime start = DateTime.Now;
-                    //var result = GetClosestSentence("I want a transport for london");
-                    var result = matcher.MatchSentence(utterance);
+                    var result = GetClosestSentence("I want a transport for london",25000);
+                   // var result = matcher.MatchSentence(utterance);
                     DateTime end = DateTime.Now;
                     TimeSpan ts = (end - start);
                     Console.WriteLine("Elapsed Time for the program with size {0} is {1} s", size, ts.TotalSeconds);

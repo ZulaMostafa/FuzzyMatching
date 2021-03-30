@@ -1,5 +1,6 @@
 ﻿using FuzzyMatching.FeatureMatrixCalculation;
 using FuzzyMatching.MatrixOperations;
+using FuzzyMatching.ReadWriteOperations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,17 +12,28 @@ namespace FuzzyMatching.Algorithms
     {
         
         private float [][] PreprocessedMatrix;
+        private bool writeArrays = true;
         private float [] ScalarValues;
         private string [] UniqueNgrams;
         private float[] IDFVector;
+        private string path = @"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching";
         private List<string> sentenceDataset = new List<string>();
         public FuzzyMatching(int size, string path)
         {
             // do the preprocessing phase
-            (PreprocessedMatrix, ScalarValues,IDFVector, UniqueNgrams) = CreateFeatureMatrix(size, path);
-        }
+            if (File.Exists(@"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching\IDF"))
+            {
+                ReadArraysFromFiles();
+                loadDataset(size, path);
+            }
+            else
+            {
+                (PreprocessedMatrix, ScalarValues, IDFVector, UniqueNgrams) = CreateFeatureMatrix(size, path);
+                WriteArraysInFiles();
 
-        private( float [] [],float [],float [],string []) CreateFeatureMatrix(int size, string path)
+            }
+        }
+        private (float[][], float[], float[], string[]) CreateFeatureMatrix(int size, string path)
         {
             // load data set
             loadDataset(size, path);
@@ -30,18 +42,47 @@ namespace FuzzyMatching.Algorithms
             return Preprocessor.Preprocessor.CreateFeatureMatrix(sentenceDataset);
         }
 
-        private void loadDataset (int size,string path)
+        private void loadDataset(int size, string path)
         {
+            
             var reader = new StreamReader(File.OpenRead(path));
             reader.ReadLine();
-            for (int i=0; i<size;i++)
+            for (int i = 0; i < size; i++)
             {
                 var line = reader.ReadLine();
                 var values = line.Split(',');
                 sentenceDataset.Add(values[1]);
             }
         }
-        public (string, float, int) MatchSentence(string sentence)
+        private void WriteArraysInFiles ()
+        {
+
+            WriteArrays.WriteFloatArrayInFile(ScalarValues, "ScalarValues",path );
+            WriteArrays.WriteFloatArrayInFile(IDFVector, "IDF",path);
+            WriteArrays.WriteFloatArrayInFile(PreprocessedMatrix, "FeatureMatrix",path);
+            WriteArrays.WriteStringArrayInFile(UniqueNgrams, "NGrams",path);
+            
+        }
+
+       
+
+
+       
+
+        private void ReadArraysFromFiles()
+        {
+           PreprocessedMatrix= ReadFiles.Read2DFloatArrayFromFile("FeatureMatrix",path);
+            ScalarValues = ReadFiles.ReadFloatArrayFromFile("ScalarValues",path);
+            IDFVector = ReadFiles.ReadFloatArrayFromFile("IDF",path);
+            UniqueNgrams= ReadFiles.ReadStringArrayFromFile("NGrams",path);
+
+        }
+
+        
+
+     
+
+    public (string, float, int) MatchSentence(string sentence)
         {
             var ngramsLength = 3;
             // calculate ngrams for the sentence
