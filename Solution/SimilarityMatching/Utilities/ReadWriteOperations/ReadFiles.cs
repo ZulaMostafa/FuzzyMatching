@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
 namespace FuzzyMatching.ReadWriteOperations
@@ -9,57 +11,26 @@ namespace FuzzyMatching.ReadWriteOperations
     {
         public static float[] ReadFloatArrayFromFile(string FileName, string path)
         {
-            var array = new List<float>();
-            using (BinaryReader br = new BinaryReader(File.Open(Path.Combine(path, FileName), FileMode.Open)))
-            {
-                long size = br.BaseStream.Length;
-                while (br.BaseStream.Position != size)
-                {
-                    array.Add(br.ReadSingle());
-                }
-            }
-            return array.ToArray();
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(Path.Combine(path, FileName), FileMode.Open, FileAccess.Read);
+            var array = (float []) formatter.Deserialize(stream);
+            return array;
         }
 
         public static float[][] Read2DFloatArrayFromFile(string FileName,string path)
         {
-            var array = new List<float[]>();
-            using (BinaryReader br = new BinaryReader(File.Open(Path.Combine(path, FileName), FileMode.Open)))
-            {
-                var temp = new List<float>();
-                long size = br.BaseStream.Length;
-                float value;
-                while (br.BaseStream.Position != size)
-                {
-                    value = br.ReadSingle();
-                    if (value == -1.1F)
-                    {
-                        array.Add(temp.ToArray());
-                        temp.Clear();
-                        continue;
-
-                    }
-                    temp.Add(value);
-
-
-
-                }
-            }
-            return array.ToArray();
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(Path.Combine(path, FileName), FileMode.Open, FileAccess.Read);
+            var array = (float[][])formatter.Deserialize(stream);
+            return array;
         }
 
         public static string[] ReadStringArrayFromFile(string FileName,string path)
         {
-            var array = new List<string>();
-            using (BinaryReader br = new BinaryReader(File.Open(Path.Combine(path, FileName), FileMode.Open)))
-            {
-                long size = br.BaseStream.Length;
-                while (br.BaseStream.Position != size)
-                {
-                    array.Add(br.ReadString());
-                }
-            }
-            return array.ToArray();
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(Path.Combine(path, FileName), FileMode.Open, FileAccess.Read);
+            var array = (string[])formatter.Deserialize(stream);
+            return array;
 
         }
 

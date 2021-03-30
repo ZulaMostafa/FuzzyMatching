@@ -1,52 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
 namespace FuzzyMatching.ReadWriteOperations
 {
     public static class WriteArrays
     {
-        public static void WriteFloatArrayInFile(float[] arr, string FileName, string path)
+        public static void WriteArrayInFile(float[] arr, string FileName, string path)
         {
-            using (BinaryWriter bw = new BinaryWriter(File.Open(Path.Combine(path, FileName), FileMode.Create)))
-            {
-                foreach (var element in arr)
-                {
-                    bw.Write(element);
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(Path.Combine(path, FileName), FileMode.Create, FileAccess.Write);
 
-                }
-            }
+            formatter.Serialize(stream, arr);
+            stream.Close();
 
 
         }
-        public static void WriteFloatArrayInFile(float[][] matrix, string FileName, string path)
+        public static void WriteArrayInFile(float[][] matrix, string FileName, string path)
         {
-            using (BinaryWriter bw = new BinaryWriter(File.Open(Path.Combine(path, FileName), FileMode.Create)))
-            {
-                foreach (var array in matrix)
-                {
-                    foreach (var element in array)
-                    {
-                        bw.Write(element);
-                    }
-                    bw.Write(-1.1F);
-                }
-
-            }
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(Path.Combine(path, FileName), FileMode.Create, FileAccess.Write);
+            formatter.Serialize(stream, matrix);
+            stream.Close();
 
 
         }
 
-        public static void WriteStringArrayInFile(string[] arr, string FileName, string path)
+        public static void WriteArrayInFile(string[] arr, string FileName, string path)
         {
-            using (BinaryWriter bw = new BinaryWriter(File.Open(Path.Combine(path, FileName), FileMode.Create)))
-            {
-                foreach (var element in arr)
-                {
-                    bw.Write(element);
-                }
-            }
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(Path.Combine(path, FileName), FileMode.Create, FileAccess.Write);
+
+            formatter.Serialize(stream, arr);
+            stream.Close();
 
         }
     }

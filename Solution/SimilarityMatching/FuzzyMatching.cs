@@ -57,10 +57,10 @@ namespace FuzzyMatching.Algorithms
         private void WriteArraysInFiles ()
         {
 
-            WriteArrays.WriteFloatArrayInFile(ScalarValues, "ScalarValues",path );
-            WriteArrays.WriteFloatArrayInFile(IDFVector, "IDF",path);
-            WriteArrays.WriteFloatArrayInFile(PreprocessedMatrix, "FeatureMatrix",path);
-            WriteArrays.WriteStringArrayInFile(UniqueNgrams, "NGrams",path);
+            WriteArrays.WriteArrayInFile(ScalarValues, "ScalarValues",path );
+            WriteArrays.WriteArrayInFile(IDFVector, "IDF",path);
+            WriteArrays.WriteArrayInFile(PreprocessedMatrix, "FeatureMatrix",path);
+            WriteArrays.WriteArrayInFile(UniqueNgrams, "NGrams",path);
             
         }
 
