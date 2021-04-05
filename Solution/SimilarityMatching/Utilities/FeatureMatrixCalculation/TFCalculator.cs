@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace FuzzyMatching.FeatureMatrixCalculation
 {
@@ -31,16 +30,16 @@ namespace FuzzyMatching.FeatureMatrixCalculation
                 }
             }
 
-         
+
 
             return result;
-          
+
         }
 
-        public static  float[][] CalculateTFVectorBatchAsync(Dictionary<string, int>[] sentenceDatasetNGramFrequencies, string[] allDataUniqueNGramsVector)
+        public static float[][] CalculateTFVectorBatchAsync(Dictionary<string, int>[] sentenceDatasetNGramFrequencies, string[] allDataUniqueNGramsVector)
         {
-            return sentenceDatasetNGramFrequencies.AsParallel().Select( sentenceNGramsFrequencies =>  CalculateTFVectorAsync(sentenceNGramsFrequencies, allDataUniqueNGramsVector)).ToArray();
-            
+            return sentenceDatasetNGramFrequencies.AsParallel().Select(sentenceNGramsFrequencies => CalculateTFVectorAsync(sentenceNGramsFrequencies, allDataUniqueNGramsVector)).ToArray();
+
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using MathNet.Numerics.LinearAlgebra;
 
 namespace FuzzyMatching.FeatureMatrixCalculation
 {
@@ -20,21 +18,21 @@ namespace FuzzyMatching.FeatureMatrixCalculation
         public static float[] CalculateIDFVector(string[] allDataUniqueNGramsVector, Dictionary<string, int> overallDataNgramsFrequencies, int overallDataLength)
         {
             var result = new float[allDataUniqueNGramsVector.Length];
-            
+
 
             result = allDataUniqueNGramsVector.AsParallel().Select(ngram => (float)Math.Log((float)overallDataLength / (float)overallDataNgramsFrequencies[ngram])).ToArray();
-           
+
             // normal approach
-             /*for (var i = 0; i < result.Length; i++)
-             {
-                 var ngram = allDataUniqueNGramsVector[i];
-                if (overallDataNgramsFrequencies.ContainsKey(ngram))
-                {
-                    var ngramOverallFrequency = overallDataNgramsFrequencies[ngram];
-                    result[i] = (float)Math.Log((float)overallDataLength / (float)ngramOverallFrequency);
-                }
-               
-             }*/
+            /*for (var i = 0; i < result.Length; i++)
+            {
+                var ngram = allDataUniqueNGramsVector[i];
+               if (overallDataNgramsFrequencies.ContainsKey(ngram))
+               {
+                   var ngramOverallFrequency = overallDataNgramsFrequencies[ngram];
+                   result[i] = (float)Math.Log((float)overallDataLength / (float)ngramOverallFrequency);
+               }
+
+            }*/
             return result;
         }
     }

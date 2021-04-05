@@ -10,11 +10,11 @@ namespace FuzzyMatching.ReadWriteOperations
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(Path.Combine(path, FileName), FileMode.Open, FileAccess.Read);
-            var array = (float []) formatter.Deserialize(stream);
+            var array = (float[])formatter.Deserialize(stream);
             return array;
         }
 
-        public static float[][] Read2DFloatArrayFromFile(string FileName,string path)
+        public static float[][] Read2DFloatArrayFromFile(string FileName, string path)
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(Path.Combine(path, FileName), FileMode.Open, FileAccess.Read);
@@ -22,7 +22,7 @@ namespace FuzzyMatching.ReadWriteOperations
             return array;
         }
 
-        public static string[] ReadStringArrayFromFile(string FileName,string path)
+        public static string[] ReadStringArrayFromFile(string FileName, string path)
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(Path.Combine(path, FileName), FileMode.Open, FileAccess.Read);

@@ -9,10 +9,10 @@ namespace FuzzyMatching.Algorithms
 {
     public class FuzzyMatching
     {
-        
-        private float [][] PreprocessedMatrix;       
-        private float [] ScalarValues;
-        private string [] UniqueNgrams;
+
+        private float[][] PreprocessedMatrix;
+        private float[] ScalarValues;
+        private string[] UniqueNgrams;
         private float[] IDFVector;
         private string path = @"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching";
         private List<string> sentenceDataset = new List<string>();
@@ -22,7 +22,7 @@ namespace FuzzyMatching.Algorithms
             if (File.Exists(@"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching\IDF"))
             {
                 ReadArraysFromFiles();
-                
+
             }
             else
             {
@@ -42,7 +42,7 @@ namespace FuzzyMatching.Algorithms
 
         private void loadDataset(int size, string path)
         {
-            
+
             var reader = new StreamReader(File.OpenRead(path));
             reader.ReadLine();
             for (int i = 0; i < size; i++)
@@ -52,50 +52,50 @@ namespace FuzzyMatching.Algorithms
                 sentenceDataset.Add(values[1]);
             }
         }
-        private void WriteArraysInFiles ()
+        private void WriteArraysInFiles()
         {
 
-            WriteArrays.WriteArrayInFile(ScalarValues, "ScalarValues",path );
-            WriteArrays.WriteArrayInFile(IDFVector, "IDF",path);
-            WriteArrays.WriteArrayInFile(PreprocessedMatrix, "FeatureMatrix",path);
-            WriteArrays.WriteArrayInFile(UniqueNgrams, "NGrams",path);
-            WriteArrays.WriteArrayInFile(sentenceDataset.ToArray(), "Dataset",path);
-            
+            WriteArrays.WriteArrayInFile(ScalarValues, "ScalarValues", path);
+            WriteArrays.WriteArrayInFile(IDFVector, "IDF", path);
+            WriteArrays.WriteArrayInFile(PreprocessedMatrix, "FeatureMatrix", path);
+            WriteArrays.WriteArrayInFile(UniqueNgrams, "NGrams", path);
+            WriteArrays.WriteArrayInFile(sentenceDataset.ToArray(), "Dataset", path);
+
         }
 
-       
 
 
-       
+
+
 
         private void ReadArraysFromFiles()
         {
-           PreprocessedMatrix= ReadFiles.Read2DFloatArrayFromFile("FeatureMatrix",path);
-            ScalarValues = ReadFiles.ReadFloatArrayFromFile("ScalarValues",path);
-            IDFVector = ReadFiles.ReadFloatArrayFromFile("IDF",path);
-            UniqueNgrams= ReadFiles.ReadStringArrayFromFile("NGrams",path);
-            sentenceDataset= ReadFiles.ReadStringArrayFromFile("Dataset", path).ToList();
+            PreprocessedMatrix = ReadFiles.Read2DFloatArrayFromFile("FeatureMatrix", path);
+            ScalarValues = ReadFiles.ReadFloatArrayFromFile("ScalarValues", path);
+            IDFVector = ReadFiles.ReadFloatArrayFromFile("IDF", path);
+            UniqueNgrams = ReadFiles.ReadStringArrayFromFile("NGrams", path);
+            sentenceDataset = ReadFiles.ReadStringArrayFromFile("Dataset", path).ToList();
 
         }
 
-        
 
-     
 
-    public (string, float, int) MatchSentence(string sentence)
+
+
+        public (string, float, int) MatchSentence(string sentence)
         {
             var ngramsLength = 3;
             // calculate ngrams for the sentence
             var inputSentenceNGrams = NGramsCalculator.GetSentenceNGramsAsync(sentence, ngramsLength);
             // calculate ngrams frequencies 
             var inputSentenceNGramFrequencies = FrequencyCalculator.GetNGramFrequencyAsync(inputSentenceNGrams);
-           // var inputSentenceUniqueNGramsVector = inputSentenceNGramFrequencies.Keys.ToArray();
+            // var inputSentenceUniqueNGramsVector = inputSentenceNGramFrequencies.Keys.ToArray();
             // calculate TF vector
-           // var inputSentenceTFVector = TFCalculator.CalculateTFVectorAsync(inputSentenceNGramFrequencies, inputSentenceUniqueNGramsVector);
+            // var inputSentenceTFVector = TFCalculator.CalculateTFVectorAsync(inputSentenceNGramFrequencies, inputSentenceUniqueNGramsVector);
             var inputSentenceTFVectorDataset = TFCalculator.CalculateTFVectorAsync(inputSentenceNGramFrequencies, UniqueNgrams);
 
             // calculate TF-IDF vector
-         
+
             var inputSentenceTFIDFVectorDataset = CellOperations.MultiplyVectorCells(inputSentenceTFVectorDataset, IDFVector);
 
             // get absolute value
@@ -103,7 +103,7 @@ namespace FuzzyMatching.Algorithms
 
             // calculate similarity
 
-            var similarityValues = DotProductCalculator.CalculateDotProduct(inputSentenceTFIDFVectorDataset, inputSentenceAbsoluteValue, PreprocessedMatrix,ScalarValues);
+            var similarityValues = DotProductCalculator.CalculateDotProduct(inputSentenceTFIDFVectorDataset, inputSentenceAbsoluteValue, PreprocessedMatrix, ScalarValues);
 
             // match string, score, index
             // get most matching one
@@ -111,7 +111,7 @@ namespace FuzzyMatching.Algorithms
             int minIndex = similarityValues.ToList().IndexOf(minValue);
 
             // return
-            return (sentenceDataset[minIndex],minValue, minIndex);
+            return (sentenceDataset[minIndex], minValue, minIndex);
         }
     }
 }

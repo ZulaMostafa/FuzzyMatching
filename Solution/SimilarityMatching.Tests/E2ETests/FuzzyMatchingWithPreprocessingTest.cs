@@ -1,5 +1,5 @@
-﻿using Xunit;
-using System;
+﻿using System;
+using Xunit;
 
 
 namespace FuzzyMatching.Tests.E2ETests
@@ -11,14 +11,14 @@ namespace FuzzyMatching.Tests.E2ETests
         {
             // get test data
             string sentence = "take record";
-           /* var sentenceDataset = new List<string>
-            {
-                "go out",
-                "drink water",
-                "do laundry",
-                "play games",
-                "blah blah blah"
-            };*/
+            /* var sentenceDataset = new List<string>
+             {
+                 "go out",
+                 "drink water",
+                 "do laundry",
+                 "play games",
+                 "blah blah blah"
+             };*/
 
             // calculate similarity (no preprocessing)
             var result = RunTime.RunTime.GetClosestSentence(sentence, 25000);
