@@ -10,7 +10,7 @@
 
   <ItemGroup>
     
-    <ProjectReference Include="..\SimilarityMatching\FuzzyMatching.csproj" />
+    <ProjectReference Include="..\SimilarityMatching\FuzzyMatching.Core.csproj" />
   </ItemGroup>
 
 </Project>

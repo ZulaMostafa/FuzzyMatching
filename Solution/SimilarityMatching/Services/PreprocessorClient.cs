@@ -1,4 +1,5 @@
 ﻿
+using FuzzyMatching.Definitions.Services;
 using FuzzyMatching.FeatureMatrixCalculation;
 using FuzzyMatching.MatrixOperations;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 
 namespace FuzzyMatching.Preprocessor
 {
-    public static class Preprocessor
+    public static class PreprocessorClient : IPreprocessorClient
     {
         public static (float[][], float[], float[], string[]) CreateFeatureMatrix(List<string> dataset)
         {

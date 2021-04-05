@@ -1,10 +1,11 @@
-﻿using System;
+﻿using FuzzyMatching.Definitions.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace FuzzyMatching.RunTime
 {
-    public static class RunTime
+    public static class RuntimeClient : IRuntimeClient
     {
         static void Main(string[] args)
         {

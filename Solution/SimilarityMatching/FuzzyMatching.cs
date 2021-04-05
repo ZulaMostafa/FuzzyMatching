@@ -1,4 +1,5 @@
-﻿using FuzzyMatching.FeatureMatrixCalculation;
+﻿using FuzzyMatching.Definitions;
+using FuzzyMatching.FeatureMatrixCalculation;
 using FuzzyMatching.MatrixOperations;
 using FuzzyMatching.ReadWriteOperations;
 using System.Collections.Generic;
@@ -7,15 +8,21 @@ using System.Linq;
 
 namespace FuzzyMatching.Algorithms
 {
-    public class FuzzyMatching
+    public class FuzzyMatchingClient : IFuzzyMatchingClient
     {
-
+        private IStorageService StorageService;
         private float[][] PreprocessedMatrix;
         private float[] ScalarValues;
         private string[] UniqueNgrams;
         private float[] IDFVector;
         private string path = @"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching";
         private List<string> sentenceDataset = new List<string>();
+
+        public FuzzyMatching(StorageType storageType)
+        {
+            StorageService = StorageFactor.create(storageType);
+        }
+
         public FuzzyMatching(int size, string path)
         {
             // do the preprocessing phase
