@@ -1,14 +1,8 @@
 ﻿using FuzzyMatching.Core.Factories;
 using FuzzyMatching.Definitions;
 using FuzzyMatching.Definitions.Models;
-using FuzzyMatching.Definitions.Models.Enums;
 using FuzzyMatching.Definitions.Services;
-using FuzzyMatching.FeatureMatrixCalculation;
-using FuzzyMatching.MatrixOperations;
-using FuzzyMatching.ReadWriteOperations;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,15 +30,15 @@ namespace FuzzyMatching.Algorithms
 
 
         
-        public  async Task<bool> PreprocessAsync(string DatasetName, string Location, List<string> dataset)
+        public  async Task<bool> PreprocessAsync(string datasetName, string location, List<string> dataset)
         {
-            var preprocessor = new Preprocessor.PreprocessorClient();
+            var preprocessor = new Core.Preprocessor.PreprocessorClient();
            
             // create feature matrix
             var matrices=   preprocessor.CreateFeatureMatrix(dataset);
             // store feature matrix
-            await StorageService.StorePreprocessedDatasetAsync(matrices, DatasetName+"_PreProcessed", Location);
-            await StorageService.StoreDatasetAsync(dataset, DatasetName + "_Dataset", Location);
+            await StorageService.StoreObjectAsync(matrices, datasetName+"_PreProcessed", location);
+            await StorageService.StoreObjectAsync(dataset, datasetName + "_Dataset", location);
 
 
             return await  Task.FromResult(true);
@@ -53,15 +47,14 @@ namespace FuzzyMatching.Algorithms
 
      
 
-        public   FuzzyMatchingResult MatchSentence(string Sentence, string Location, string DatasetName)
+        public   FuzzyMatchingResult MatchSentence(string sentence, string location, string datasetName)
         {
-            var runTime = new RunTime.RuntimeClient();
+            var runTime = new Core.RunTime.RuntimeClient();
 
-            var matrices = (PreprocessedDataset)StorageService.LoadPreprocessedDatasetAsync(DatasetName + "_PreProcessed", Location).GetAwaiter().GetResult();
-            
-            var dataset = (List<string>)StorageService.LoadDatasetAsync(DatasetName + "_Dataset", Location).GetAwaiter().GetResult();
+            var matrices = (PreprocessedDataset)StorageService.LoadObjectAsync(datasetName + "_PreProcessed", location).GetAwaiter().GetResult();
+            var dataset = (List<string>)StorageService.LoadObjectAsync(datasetName + "_Dataset", location).GetAwaiter().GetResult();
             // return
-            return runTime.MatchSentence(Sentence, matrices, dataset);
+            return runTime.MatchSentence(sentence, matrices, dataset);
         }
 
         public List<string> ListPreProcessedDatasets(string directory)

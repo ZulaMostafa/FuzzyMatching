@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace FuzzyMatching.MatrixOperations
+namespace FuzzyMatching.Core.MatrixOperations
 {
     public static class DotProductCalculator
     {

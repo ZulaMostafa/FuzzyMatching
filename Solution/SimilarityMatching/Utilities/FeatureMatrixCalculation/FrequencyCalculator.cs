@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FuzzyMatching.FeatureMatrixCalculation
+namespace FuzzyMatching.Core.FeatureMatrixCalculation
 {
     public static class FrequencyCalculator
     {

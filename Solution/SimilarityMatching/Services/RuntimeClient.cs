@@ -1,14 +1,11 @@
 ﻿using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
-using FuzzyMatching.FeatureMatrixCalculation;
-using FuzzyMatching.MatrixOperations;
-using System;
+using FuzzyMatching.Core.FeatureMatrixCalculation;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using FuzzyMatching.Core.MatrixOperations;
 
-namespace FuzzyMatching.RunTime
+namespace FuzzyMatching.Core.RunTime
 {
     public  class RuntimeClient : IRuntimeClient
     {

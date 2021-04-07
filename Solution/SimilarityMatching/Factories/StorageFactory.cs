@@ -1,9 +1,6 @@
 ﻿using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
 using Microsoft.CogSLanguageUtilities.Core.Services.Storage;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FuzzyMatching.Core.Factories
 {

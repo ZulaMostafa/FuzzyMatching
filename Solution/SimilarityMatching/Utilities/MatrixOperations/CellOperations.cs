@@ -9,7 +9,7 @@ using MathNet.Numerics.LinearAlgebra;
 using System.Linq;
 // using MathNet.Numerics.LinearAlgebra.Double;
 
-namespace FuzzyMatching.MatrixOperations
+namespace FuzzyMatching.Core.MatrixOperations
 {
 
     public static class CellOperations

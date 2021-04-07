@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace FuzzyMatching.FeatureMatrixCalculation
+namespace FuzzyMatching.Core.FeatureMatrixCalculation
 {
     public static class TFCalculator
     {

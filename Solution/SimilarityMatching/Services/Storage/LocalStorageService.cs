@@ -1,15 +1,15 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-﻿using Microsoft.CogSLanguageUtilities.Definitions.APIs.Services;
-using Microsoft.CogSLanguageUtilities.Definitions.Exceptions.Storage;
-using Microsoft.CogSLanguageUtilities.Definitions.Models.Enums.Storage;
+//using Microsoft.CogSLanguageUtilities.Definitions.APIs.Services;
+//using Microsoft.CogSLanguageUtilities.Definitions.Exceptions.Storage;
+//using Microsoft.CogSLanguageUtilities.Definitions.Models.Enums.Storage;
 using FuzzyMatching.Definitions.Services;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FuzzyMatching.Definitions.Models;
-using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
 {
@@ -31,20 +31,24 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             _targetDirectory = targetDirectory;
         }
 
-        public async Task<string[]> ListFilesAsync()
+        public async Task<string[]> ListFilesAsync(string fileName)
         {
-            return await Task.FromResult(Directory.GetFiles(_targetDirectory).Select(i => Path.GetFileName(i)).ToArray());
+            string filePath = Path.Combine(_targetDirectory, fileName);
+            return await Task.FromResult(Directory.GetFiles(filePath).Select(i => Path.GetFileName(i)).ToArray());
         }
 
-        public async Task<Stream> ReadFileAsync(string fileName)
+        public async Task<Object> ReadFileAsync(string fileName)
         {
             string filePath = Path.Combine(_targetDirectory, fileName);
             if (await FileExists(fileName))
             {
                 try
                 {
-                    FileStream fs = File.OpenRead(filePath);
-                    return await Task.FromResult(fs as Stream);
+                   IFormatter formatter = new BinaryFormatter();
+                   Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                   return  await Task.FromResult( formatter.Deserialize(stream));
+                    
+                   
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -73,12 +77,17 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
         }
 
-        public async Task StoreDataAsync(string data, string fileName)
+        public async Task StoreDataAsync(Object data, string fileName)
         {
             try
             {
+                IFormatter formatter = new BinaryFormatter();
                 string filePath = Path.Combine(_targetDirectory, fileName);
-                await File.WriteAllTextAsync(filePath, data);
+                Stream stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                formatter.Serialize(stream, data);
+                stream.Close();
+                
+               
             }
             catch (UnauthorizedAccessException)
             {
@@ -87,17 +96,13 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
         }
 
-        public async Task<string> ReadAsStringFromAbsolutePathAsync(string filePath)
+        public async Task<Object> ReadFromAbsolutePathAsync(string DatasetName, string Location)
         {
-            if (await FileExistsAbsolutePath(filePath))
-            {
-                return await File.ReadAllTextAsync(filePath);
-            }
-            else
-            {
-                throw new FileNotFoundException();
-                //throw new Definitions.Exceptions.Storage.FileNotFoundException(filePath);
-            }
+            var relativePath = Path.Combine(DatasetName, Location);
+            
+                return await ReadFileAsync(relativePath);
+               
+            
         }
 
         public Task<bool> FileExists(string fileName)
@@ -111,43 +116,37 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             return Task.FromResult(File.Exists(filePath));
         }
 
-        public Task CreateDirectoryAsync(string directoryName)
+        public Task CreateDirectoryAsync(string location)
         {
-            var completePath = Path.Combine(_targetDirectory, directoryName);
+            var completePath = Path.Combine(_targetDirectory, location);
             Directory.CreateDirectory(completePath);
             return Task.CompletedTask;
         }
 
-        public async Task StoreDataToDirectoryAsync(string data, string directoryName, string fileName)
+        public async Task StoreDataToDirectoryAsync(Object data, string location, string fileName)
         {
-            var relativePath = Path.Combine(directoryName, fileName);
+            var relativePath = Path.Combine(location, fileName);
             await StoreDataAsync(data, relativePath);
         }
 
 
-        public Task<object> LoadPreprocessedDatasetAsync(string datasetName, string Location)
+        public async Task<Object> LoadObjectAsync(string name, string Location)
         {
-            throw new NotImplementedException();
+            return await ReadFromAbsolutePathAsync(name, Location);
+
         }
 
-        public Task<object> LoadDatasetAsync(string datasetName, string Location)
+       
+        public async Task StoreObjectAsync(Object data, string fileName, string location)
         {
-            throw new NotImplementedException();
+            await StoreDataToDirectoryAsync(data, location, fileName);
+            return;
         }
 
-        public Task StorePreprocessedDatasetAsync(PreprocessedDataset preprocessedDataset, string datasetName, string Location)
+        public async Task<string[]> ListPreprocessedDatasetsAsync(string Location)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task StoreDatasetAsync(List<string> Dataset, string datasetName, string Location)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string[]> ListPreprocessedDatasetsAsync(string Location)
-        {
-            throw new NotImplementedException();
+            return await ListFilesAsync(Location);
+            
         }
     }
 }

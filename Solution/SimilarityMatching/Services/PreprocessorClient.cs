@@ -1,12 +1,12 @@
 ﻿
 using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
-using FuzzyMatching.FeatureMatrixCalculation;
-using FuzzyMatching.MatrixOperations;
+using FuzzyMatching.Core.FeatureMatrixCalculation;
 using System.Collections.Generic;
 using System.Linq;
+using FuzzyMatching.Core.MatrixOperations;
 
-namespace FuzzyMatching.Preprocessor
+namespace FuzzyMatching.Core.Preprocessor
 {
     public  class PreprocessorClient : IPreprocessorClient
     {

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using FuzzyMatching.Definitions.Models;
 
 namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
 {
@@ -49,7 +48,7 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             return blobNames.ToArray();
         }
 
-        public async Task<Object> ReadFileAsync(string fileName)
+        public async Task<Stream> ReadFileAsync(string fileName)
         {
             if (await FileExists(fileName))
             {
@@ -97,9 +96,9 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
         }
 
-        public async Task<Object> ReadFromAbsolutePathAsync(string DatasetName , string Location)
+        public async Task<Stream> ReadFromAbsolutePathAsync(string fileName , string location)
         {
-            var relativePath = Path.Combine(DatasetName, Location);
+            var relativePath = Path.Combine(fileName, location);
             return await ReadFileAsync(relativePath);
             
         }
@@ -114,44 +113,36 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
 
        
 
-        public async Task StoreDataToDirectoryAsync(Object data, string directoryName, string fileName)
+        public async Task StoreDataToDirectoryAsync(Object data, string location, string fileName)
         {
-            var relativePath = Path.Combine(directoryName, fileName);
+            var relativePath = Path.Combine(location, fileName);
             await StoreDataAsync(data, relativePath);
         }
 
 
 
-
-        public async Task StorePreprocessedDatasetAsync(PreprocessedDataset preprocessedDataset, string datasetName, string Location)
+         
+    
+        public async Task StoreObjectAsync(Object data, string fileName, string location)
         {
-            await StoreDataToDirectoryAsync(preprocessedDataset, Location, datasetName);
-            return;
-        }
-        public async Task StoreDatasetAsync(List<string> dataset, string datasetName, string Location)
-        {
-            await StoreDataToDirectoryAsync(dataset, Location, datasetName);
+            await StoreDataToDirectoryAsync(data, location, fileName);
             return;
         }
 
-        public Task<Object> LoadPreprocessedDatasetAsync(string datasetName, string Location)
-        {
-            return ReadFromAbsolutePathAsync(datasetName, Location);
-            throw new NotImplementedException();
-        }
 
-        public async Task<string[]> ListPreprocessedDatasetsAsync(string Location)
+        public async Task<string[]> ListPreprocessedDatasetsAsync(string location)
         {
             return await ListFilesAsync();
             
         }
 
-        public Task<Object> LoadDatasetAsync(string datasetName, string Location)
+        public async Task<Object> LoadObjectAsync(string name, string location)
         {
-            return ReadFromAbsolutePathAsync(datasetName, Location);
+           return await ReadFromAbsolutePathAsync(name, location);
         
         }
 
-  
+       
+        
     }
 }
