@@ -6,10 +6,12 @@
 
 	
   <ItemGroup>
-    <PackageReference Include="DotNumerics" Version="1.1.0" />
-    <PackageReference Include="NumSharp" Version="0.30.0" />
-    <PackageReference Include="Pandas.NET" Version="0.1.0" />
+	 <PackageReference Include="Azure.Storage.Blobs" Version="12.8.1" />
 	 <PackageReference Include="MathNet.Numerics" Version="4.15.0" />
   </ItemGroup>
 
+	
+  <ItemGroup>
+    <ProjectReference Include="..\FuzzyMatching.Definitions\FuzzyMatching.Definitions.csproj" />
+  </ItemGroup>
 </Project>

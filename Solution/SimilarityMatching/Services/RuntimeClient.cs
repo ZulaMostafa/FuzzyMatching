@@ -1,61 +1,55 @@
-﻿using FuzzyMatching.Definitions.Services;
+﻿using FuzzyMatching.Definitions.Models;
+using FuzzyMatching.Definitions.Services;
+using FuzzyMatching.FeatureMatrixCalculation;
+using FuzzyMatching.MatrixOperations;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FuzzyMatching.RunTime
 {
-    public static class RuntimeClient : IRuntimeClient
+    public  class RuntimeClient : IRuntimeClient
     {
-        static void Main(string[] args)
+       
+        
+
+        public FuzzyMatchingResult MatchSentence(string sentence, PreprocessedDataset preprocessedDataset , List<string> Dataset)
         {
+            FuzzyMatchingResult Results = new FuzzyMatchingResult();
+            var ngramsLength = 3;
+            // calculate ngrams for the sentence
+            var inputSentenceNGrams = NGramsCalculator.GetSentenceNGramsAsync(sentence, ngramsLength);
+            // calculate ngrams frequencies 
+            var inputSentenceNGramFrequencies = FrequencyCalculator.GetNGramFrequencyAsync(inputSentenceNGrams);
+            // var inputSentenceUniqueNGramsVector = inputSentenceNGramFrequencies.Keys.ToArray();
+            // calculate TF vector
+            // var inputSentenceTFVector = TFCalculator.CalculateTFVectorAsync(inputSentenceNGramFrequencies, inputSentenceUniqueNGramsVector);
+            var inputSentenceTFVectorDataset = TFCalculator.CalculateTFVectorAsync(inputSentenceNGramFrequencies, preprocessedDataset.AllDataUniqueNGramsVector);
 
-            int[] sizes = new int[7] { 10, 100, 1000, 10000, 25000, 50000, 100000 };
-            var readerUtterance = new StreamReader(File.OpenRead(@"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching\largeDataset.csv"));
-            readerUtterance.ReadLine();
+            // calculate TF-IDF vector
 
-            Console.WriteLine("Dataset Loaded !!");
+            var inputSentenceTFIDFVectorDataset = CellOperations.MultiplyVectorCells(inputSentenceTFVectorDataset, preprocessedDataset.OverallDataIDFVector);
 
-            List<string> utteranceList = new List<string>();
+            // get absolute value
+            var inputSentenceAbsoluteValue = DotProductCalculator.GetVectorAbsoluteValue(inputSentenceTFIDFVectorDataset);
 
-            for (int i = 0; i < 10; i++)
-            {
-                var line = readerUtterance.ReadLine();
-                var values = line.Split(',');
-                utteranceList.Add(values[1]);
-            }
+            // calculate similarity
 
-            //foreach (var utterance in utteranceList)
-            //{
-            var utterance = "take record";
-            var size = 25000;
-            Console.WriteLine("results for sentence: {0}", utterance);
-            // foreach (var size in sizes)
-            {
-                Console.WriteLine("Hello World!");
-                //var matcher = new Algorithms.FuzzyMatching(size, @"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching\LargeDataset.csv");
-                DateTime start = DateTime.Now;
-                var result = GetClosestSentence(utterance, 25000);
-                // var result = matcher.MatchSentence(utterance);
-                DateTime end = DateTime.Now;
-                TimeSpan ts = (end - start);
-                Console.WriteLine("Elapsed Time for the program with size {0} is {1} s", size, ts.TotalSeconds);
-                var closestMatch = result.Item1;
-                Console.WriteLine(closestMatch);
-                var index = result.Item2;
-                Console.WriteLine(index);
-                var score = result.Item3;
-                Console.WriteLine(score);
-                //}
-                Console.WriteLine("---------------------------");
+            var similarityValues = DotProductCalculator.CalculateDotProduct(inputSentenceTFIDFVectorDataset, inputSentenceAbsoluteValue, preprocessedDataset.InputSentenceDatasetTFIDFMatrix, preprocessedDataset.InputSentenceDataseetAbsoluteValues);
 
-            }
+            // match string, score, index
+            // get most matching one
+            float minValue = similarityValues.Min();
+            int minIndex = similarityValues.ToList().IndexOf(minValue);
+
+            Results.MatchingIndex = minIndex;
+            Results.MatchingScore = minValue;
+            Results.ClosestSentence = Dataset[minIndex];
+            return Results;
         }
-        public static (string, float, int) GetClosestSentence(string Sentence, int size)
 
-        {
-            var matcher = new Algorithms.FuzzyMatching(size, @"C:\Users\v-kelhammady\OneDrive - Microsoft\Documents\GitHub\FuzzyMatching\LargeDataset.csv");
-            return matcher.MatchSentence(Sentence);
-        }
+       
     }
 }

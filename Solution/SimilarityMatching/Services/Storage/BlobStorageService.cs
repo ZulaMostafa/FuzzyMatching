@@ -1,14 +1,14 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-﻿using Azure;
+using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Microsoft.CogSLanguageUtilities.Definitions.APIs.Services;
-using Microsoft.CogSLanguageUtilities.Definitions.Exceptions.Storage;
+using FuzzyMatching.Definitions.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using FuzzyMatching.Definitions.Models;
 
 namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
 {
@@ -28,12 +28,13 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
                 _blobContainerClient = blobServiceClient.GetBlobContainerClient(containerName);
                 if (!_blobContainerClient.Exists())
                 {
-                    throw new BlobContainerNotFoundException(containerName);
+                    throw new FileLoadException();
+                   // throw new BlobContainerNotFoundException(containerName);
                 }
             }
             catch (Exception e) when (e is RequestFailedException || e is FormatException || e is AggregateException)
             {
-                throw new InvalidBlobStorageConnectionStringException(connectionString);
+                throw new Exception() ;
             }
         }
 
@@ -48,7 +49,7 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             return blobNames.ToArray();
         }
 
-        public async Task<Stream> ReadFileAsync(string fileName)
+        public async Task<Object> ReadFileAsync(string fileName)
         {
             if (await FileExists(fileName))
             {
@@ -58,7 +59,8 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
             else
             {
-                throw new Definitions.Exceptions.Storage.FileNotFoundException(fileName);
+                throw new FileNotFoundException();
+                //throw new Definitions.Exceptions.Storage.FileNotFoundException(fileName);
             }
         }
 
@@ -75,11 +77,12 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
             else
             {
-                throw new Definitions.Exceptions.Storage.FileNotFoundException(fileName);
+                throw new FileNotFoundException();
+                //throw new Definitions.Exceptions.Storage.FileNotFoundException(fileName);
             }
         }
 
-        public async Task StoreDataAsync(string data, string fileName)
+        public async Task StoreDataAsync(Object data, string fileName)
         {
             BlobClient blobClient = _blobContainerClient.GetBlobClient(fileName);
             using (MemoryStream stream = new MemoryStream())
@@ -94,9 +97,11 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
         }
 
-        public Task<string> ReadAsStringFromAbsolutePathAsync(string filePath)
+        public async Task<Object> ReadFromAbsolutePathAsync(string DatasetName , string Location)
         {
-            throw new NotImplementedException();
+            var relativePath = Path.Combine(DatasetName, Location);
+            return await ReadFileAsync(relativePath);
+            
         }
 
         public async Task<bool> FileExists(string fileName)
@@ -107,15 +112,46 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             });
         }
 
-        public Task CreateDirectoryAsync(string directoryName)
-        {
-            return Task.CompletedTask;
-        }
+       
 
-        public async Task StoreDataToDirectoryAsync(string data, string directoryName, string fileName)
+        public async Task StoreDataToDirectoryAsync(Object data, string directoryName, string fileName)
         {
             var relativePath = Path.Combine(directoryName, fileName);
             await StoreDataAsync(data, relativePath);
         }
+
+
+
+
+        public async Task StorePreprocessedDatasetAsync(PreprocessedDataset preprocessedDataset, string datasetName, string Location)
+        {
+            await StoreDataToDirectoryAsync(preprocessedDataset, Location, datasetName);
+            return;
+        }
+        public async Task StoreDatasetAsync(List<string> dataset, string datasetName, string Location)
+        {
+            await StoreDataToDirectoryAsync(dataset, Location, datasetName);
+            return;
+        }
+
+        public Task<Object> LoadPreprocessedDatasetAsync(string datasetName, string Location)
+        {
+            return ReadFromAbsolutePathAsync(datasetName, Location);
+            throw new NotImplementedException();
+        }
+
+        public async Task<string[]> ListPreprocessedDatasetsAsync(string Location)
+        {
+            return await ListFilesAsync();
+            
+        }
+
+        public Task<Object> LoadDatasetAsync(string datasetName, string Location)
+        {
+            return ReadFromAbsolutePathAsync(datasetName, Location);
+        
+        }
+
+  
     }
 }

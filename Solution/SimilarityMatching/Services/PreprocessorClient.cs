@@ -1,4 +1,5 @@
 ﻿
+using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
 using FuzzyMatching.FeatureMatrixCalculation;
 using FuzzyMatching.MatrixOperations;
@@ -7,10 +8,13 @@ using System.Linq;
 
 namespace FuzzyMatching.Preprocessor
 {
-    public static class PreprocessorClient : IPreprocessorClient
+    public  class PreprocessorClient : IPreprocessorClient
     {
-        public static (float[][], float[], float[], string[]) CreateFeatureMatrix(List<string> dataset)
+      
+
+         public  PreprocessedDataset  CreateFeatureMatrix(List<string> dataset)
         {
+            PreprocessedDataset calculatedFeaturesMatrices = new PreprocessedDataset();
             // calculate ngrams for each sentence
             var ngramsLength = 3;
             var inputSentenceDatasetNGrams = NGramsCalculator.GetSentenceNGramsBatchAsync(dataset, ngramsLength);//.GetAwaiter().GetResult();
@@ -37,7 +41,12 @@ namespace FuzzyMatching.Preprocessor
             // get scalar values
             var inputSentenceDataseetAbsoluteValues = DotProductCalculator.CalculateVectorAbsoluteValueBatch(inputSentenceDatasetTFIDFMatrix);
 
-            return (inputSentenceDatasetTFIDFMatrix, inputSentenceDataseetAbsoluteValues, overallDataIDFVector, allDataUniqueNGramsVector);
+            calculatedFeaturesMatrices.InputSentenceDataseetAbsoluteValues = inputSentenceDataseetAbsoluteValues;
+            calculatedFeaturesMatrices.InputSentenceDatasetTFIDFMatrix = inputSentenceDatasetTFIDFMatrix;
+            calculatedFeaturesMatrices.OverallDataIDFVector = overallDataIDFVector;
+            calculatedFeaturesMatrices.AllDataUniqueNGramsVector = allDataUniqueNGramsVector;
+
+            return calculatedFeaturesMatrices;
         }
     }
 }

@@ -3,10 +3,13 @@
 ﻿using Microsoft.CogSLanguageUtilities.Definitions.APIs.Services;
 using Microsoft.CogSLanguageUtilities.Definitions.Exceptions.Storage;
 using Microsoft.CogSLanguageUtilities.Definitions.Models.Enums.Storage;
+using FuzzyMatching.Definitions.Services;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FuzzyMatching.Definitions.Models;
+using System.Collections.Generic;
 
 namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
 {
@@ -22,7 +25,8 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
         {
             if (!Directory.Exists(targetDirectory))
             {
-                throw new FolderNotFoundException(targetDirectory);
+                throw new FileNotFoundException();
+                //throw new FolderNotFoundException(targetDirectory);
             }
             _targetDirectory = targetDirectory;
         }
@@ -44,12 +48,14 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    throw new UnauthorizedFileAccessException(AccessType.Read.ToString(), Path.Combine(_targetDirectory, fileName));
+                    throw new UnauthorizedAccessException();
+                    //throw new UnauthorizedFileAccessException(AccessType.Read.ToString(), Path.Combine(_targetDirectory, fileName));
                 }
             }
             else
             {
-                throw new Definitions.Exceptions.Storage.FileNotFoundException(filePath);
+                throw new FileNotFoundException();
+                //throw new Definitions.Exceptions.Storage.FileNotFoundException(filePath);
             }
         }
 
@@ -62,7 +68,8 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
             else
             {
-                throw new Definitions.Exceptions.Storage.FileNotFoundException(filePath);
+                throw new FileNotFoundException();
+                //throw new Definitions.Exceptions.Storage.FileNotFoundException(filePath);
             }
         }
 
@@ -75,7 +82,8 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
             catch (UnauthorizedAccessException)
             {
-                throw new UnauthorizedFileAccessException(AccessType.Write.ToString(), fileName);
+                throw new UnauthorizedAccessException();
+                //throw new UnauthorizedFileAccessException(AccessType.Write.ToString(), fileName);
             }
         }
 
@@ -87,7 +95,8 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
             else
             {
-                throw new Definitions.Exceptions.Storage.FileNotFoundException(filePath);
+                throw new FileNotFoundException();
+                //throw new Definitions.Exceptions.Storage.FileNotFoundException(filePath);
             }
         }
 
@@ -113,6 +122,32 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
         {
             var relativePath = Path.Combine(directoryName, fileName);
             await StoreDataAsync(data, relativePath);
+        }
+
+
+        public Task<object> LoadPreprocessedDatasetAsync(string datasetName, string Location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<object> LoadDatasetAsync(string datasetName, string Location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task StorePreprocessedDatasetAsync(PreprocessedDataset preprocessedDataset, string datasetName, string Location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task StoreDatasetAsync(List<string> Dataset, string datasetName, string Location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<string[]> ListPreprocessedDatasetsAsync(string Location)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -3,11 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzyMatching", "SimilarityMatching\FuzzyMatching.csproj", "{F11EB70A-F065-4919-AA59-2EDEF4F6A109}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzyMatching.Tests", "SimilarityMatching.Tests\FuzzyMatching.Tests.csproj", "{94B74996-E721-4FB3-BF1F-4B0F8FF3611A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01AEC6F1-F25F-45B9-8CF1-4C27DD352854} = {01AEC6F1-F25F-45B9-8CF1-4C27DD352854}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuzzyMatching.Definitions", "FuzzyMatching.Definitions\FuzzyMatching.Definitions.csproj", "{01AEC6F1-F25F-45B9-8CF1-4C27DD352854}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzyMatching.Definitions", "FuzzyMatching.Definitions\FuzzyMatching.Definitions.csproj", "{01AEC6F1-F25F-45B9-8CF1-4C27DD352854}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FuzzyMatching.Core", "SimilarityMatching\FuzzyMatching.Core.csproj", "{D49EFBB2-ADB5-4EAB-A2DE-FE9542DC83ED}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01AEC6F1-F25F-45B9-8CF1-4C27DD352854} = {01AEC6F1-F25F-45B9-8CF1-4C27DD352854}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F11EB70A-F065-4919-AA59-2EDEF4F6A109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F11EB70A-F065-4919-AA59-2EDEF4F6A109}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F11EB70A-F065-4919-AA59-2EDEF4F6A109}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F11EB70A-F065-4919-AA59-2EDEF4F6A109}.Release|Any CPU.Build.0 = Release|Any CPU
 		{94B74996-E721-4FB3-BF1F-4B0F8FF3611A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{94B74996-E721-4FB3-BF1F-4B0F8FF3611A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94B74996-E721-4FB3-BF1F-4B0F8FF3611A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +29,10 @@ Global
 		{01AEC6F1-F25F-45B9-8CF1-4C27DD352854}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01AEC6F1-F25F-45B9-8CF1-4C27DD352854}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01AEC6F1-F25F-45B9-8CF1-4C27DD352854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D49EFBB2-ADB5-4EAB-A2DE-FE9542DC83ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D49EFBB2-ADB5-4EAB-A2DE-FE9542DC83ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D49EFBB2-ADB5-4EAB-A2DE-FE9542DC83ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D49EFBB2-ADB5-4EAB-A2DE-FE9542DC83ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
