@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FuzzyMatching.Definitions.Models
 {
+   [Serializable]
     public class PreprocessedDataset
     {
         private float[][] inputSentenceDatasetTFIDFMatrix;

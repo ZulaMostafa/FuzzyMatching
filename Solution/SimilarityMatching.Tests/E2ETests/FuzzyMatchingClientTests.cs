@@ -2,6 +2,7 @@
 using FuzzyMatching.Definitions.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace FuzzyMatching.Tests.E2ETests
     public class FuzzyMatchingClientTests
     {
         [Fact]
-        public async System.Threading.Tasks.Task TestAlgorithmAsync()
+        public void TestAlgorithm()
         {
             // get test data
             //string sentence = "take record";
@@ -34,10 +35,10 @@ namespace FuzzyMatching.Tests.E2ETests
                 Dataset.Add(values[1]);
             }
             string name = "mydataset";
-           await fuzzyMatcher.PreprocessAsync(name, "", Dataset);
-            var result =fuzzyMatcher.MatchSentence("take record", "", name);
+            fuzzyMatcher.PreprocessAsync(name, "", Dataset);
+            var result =fuzzyMatcher.MatchSentenceAsync("take record", "", name).GetAwaiter().GetResult();
             Console.WriteLine(result.ClosestSentence);
-
+            Debug.Assert(result.ClosestSentence == "kkfj", "dsjfaaf");
             /* var sentenceDataset = new List<string>
              {
                  "go out",

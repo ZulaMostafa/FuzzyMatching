@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using FuzzyMatching.Definitions.Models;
 
 namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
 {
@@ -77,20 +78,23 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
         }
 
-        public async Task StoreDataAsync(Object data, string fileName)
+        public  void StoreDataAsync(Object data, string fileName)
         {
             try
             {
+               
                 IFormatter formatter = new BinaryFormatter();
                 string filePath = Path.Combine(_targetDirectory, fileName);
                 Stream stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
                 formatter.Serialize(stream, data);
                 stream.Close();
+               
                 
                
             }
             catch (UnauthorizedAccessException)
             {
+                
                 throw new UnauthorizedAccessException();
                 //throw new UnauthorizedFileAccessException(AccessType.Write.ToString(), fileName);
             }
@@ -126,7 +130,7 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
         public async Task StoreDataToDirectoryAsync(Object data, string location, string fileName)
         {
             var relativePath = Path.Combine(location, fileName);
-            await StoreDataAsync(data, relativePath);
+             StoreDataAsync(data, relativePath);
         }
 
 
@@ -142,6 +146,8 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             await StoreDataToDirectoryAsync(data, location, fileName);
             return;
         }
+
+       
 
         public async Task<string[]> ListPreprocessedDatasetsAsync(string Location)
         {

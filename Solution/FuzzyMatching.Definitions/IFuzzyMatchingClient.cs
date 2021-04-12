@@ -7,7 +7,7 @@ namespace FuzzyMatching.Definitions
     public interface IFuzzyMatchingClient
     {
         public Task<bool> PreprocessAsync(string datasetName,string Location, List<string> dataset);
-        public FuzzyMatchingResult MatchSentence(string sentence,string Location, string datasetName);
+        public Task<FuzzyMatchingResult> MatchSentenceAsync(string sentence,string Location, string datasetName);
         public List<string> ListPreProcessedDatasets(string directory);
     }
 }
