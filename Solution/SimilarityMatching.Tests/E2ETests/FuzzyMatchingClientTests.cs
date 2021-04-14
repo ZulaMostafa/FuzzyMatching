@@ -14,49 +14,44 @@ namespace FuzzyMatching.Tests.E2ETests
         [Fact]
         public void TestAlgorithm()
         {
-            // get test data
-            //string sentence = "take record";
             var storageOptions = new StorageOptions();
-            storageOptions.StorageType = Definitions.Models.Enums.StorageType.Local;
-            storageOptions.BaseDirectory = @"C:\Users\karim\Documents\GitHub\FuzzyMatching";
+            // local storage
+            //storageOptions.StorageType = FuzzyMatching.Definitions.Models.Enums.StorageType.Local;
+            //storageOptions.BaseDirectory = @"C:\Users\karim\Documents\GitHub\FuzzyMatching";
+
+            storageOptions.StorageType = FuzzyMatching.Definitions.Models.Enums.StorageType.Blob;
+            storageOptions.ConnectionString = "DefaultEndpointsProtocol=https;AccountName=fuzzytest12;AccountKey=p3h+kwNL/2V5Hx7yn73NxX6b0Nkx9elcu6CoR65Hojf3qYO6Iq23Vd9GjTkWLLNieYMKJ7alWYKpLL+6o28Z6Q==;EndpointSuffix=core.windows.net";
+            storageOptions.ContainerName = "container";
             var fuzzyMatcher = new FuzzyMatchingClient(storageOptions);
 
-            var readerUtterance = new StreamReader(File.OpenRead(@"C:\Users\karim\Documents\GitHub\FuzzyMatching\largeDataset.csv"));
-            readerUtterance.ReadLine();
+            int[] sizes = new int[6] { 10, 100, 1000, 10000, 25000, 50000 };
 
-            Console.WriteLine("Dataset Loaded !!");
 
-            List<string> Dataset = new List<string>();
+            List<string> rawData = new List<string>();
 
-            for (int i = 0; i < 25000; i++)
+
+            foreach (var size in sizes)
             {
-                var line = readerUtterance.ReadLine();
-                var values = line.Split(',');
-                Dataset.Add(values[1]);
-            }
-            string name = "mydataset";
-            fuzzyMatcher.PreprocessAsync(name, "", Dataset);
-            var result =fuzzyMatcher.MatchSentenceAsync("take record", "", name).GetAwaiter().GetResult();
-            Console.WriteLine(result.ClosestSentence);
-            Debug.Assert(result.ClosestSentence == "kkfj", "dsjfaaf");
-            /* var sentenceDataset = new List<string>
-             {
-                 "go out",
-                 "drink water",
-                 "do laundry",
-                 "play games",
-                 "blah blah blah"
-             };*/
+                var readerUtterance = new StreamReader(File.OpenRead(@"C:\Users\karim\Documents\GitHub\FuzzyMatching\largeDataset.csv"));
+                readerUtterance.ReadLine();
+                for (int i = 0; i < size; i++)
+                {
+                    var line = readerUtterance.ReadLine();
+                    var values = line.Split(',');
+                    rawData.Add(values[1]);
+                }
 
-            // calculate similarity (no preprocessing)
-            //var result = RunTime.RunTime.GetClosestSentence(sentence, 25000);
-            //var closestMatch = result.Item1;
-            //// expected output: barca take record as robson celebrates birthday in
-            //Console.WriteLine(closestMatch);
-            //var index = result.Item2;
-            //Console.WriteLine(index);
-            //var score = result.Item3;
-            //Console.WriteLine(score);
-        }
+
+                Console.WriteLine("Dataset Loaded !!");
+                string name = "mydataset";
+                fuzzyMatcher.PreprocessAsync(name, "", rawData);
+                DateTime start = DateTime.Now;
+                var result = fuzzyMatcher.MatchSentenceAsync("take record", "", name).GetAwaiter().GetResult();
+                DateTime end = DateTime.Now;
+                TimeSpan ts = (end - start);
+                Console.WriteLine("Elapsed Time for the program with size {0} is {1} s", size, ts.TotalSeconds);
+                Console.WriteLine(result.ClosestSentence);
+                rawData.Clear();
+            }
     }
-}
+
