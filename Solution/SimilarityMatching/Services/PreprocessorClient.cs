@@ -1,20 +1,18 @@
 ﻿
+using FuzzyMatching.Core.FeatureMatrixCalculation;
+using FuzzyMatching.Core.MatrixOperations;
 using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
-using FuzzyMatching.Core.FeatureMatrixCalculation;
 using System.Collections.Generic;
 using System.Linq;
-using FuzzyMatching.Core.MatrixOperations;
 
 namespace FuzzyMatching.Core.Preprocessor
 {
-    public  class PreprocessorClient : IPreprocessorClient
+    public class PreprocessorClient : IPreprocessorClient
     {
-      
-
-         public  PreprocessedDataset  CreateFeatureMatrix(List<string> dataset)
+        public ProcessedDataset PreprocessDataset(List<string> dataset)
         {
-            PreprocessedDataset calculatedFeaturesMatrices = new PreprocessedDataset();
+            var calculatedFeaturesMatrices = new ProcessedDataset();
             // calculate ngrams for each sentence
             var ngramsLength = 3;
             var inputSentenceDatasetNGrams = NGramsCalculator.GetSentenceNGramsBatchAsync(dataset, ngramsLength);//.GetAwaiter().GetResult();
@@ -28,7 +26,6 @@ namespace FuzzyMatching.Core.Preprocessor
             var allDataUniqueNGramsVector = overallDataNgramFrequencies.Keys.ToArray();
 
             // calculate TF
-
             var inputSentenceDatasetTFMatrix = TFCalculator.CalculateTFVectorBatchAsync(inputSentenceDatasetNGramFrequencies, allDataUniqueNGramsVector);//.GetAwaiter().GetResult();
 
             // calculate IDF

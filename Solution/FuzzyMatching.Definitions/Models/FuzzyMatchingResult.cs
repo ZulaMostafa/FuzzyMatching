@@ -2,12 +2,8 @@
 {
     public class FuzzyMatchingResult
     {
-        private string closestSentence;
-        private float matchingScore;
-        private int matchingIndex;
-
-        public string ClosestSentence { get => closestSentence; set => closestSentence = value; }
-        public float MatchingScore { get => matchingScore; set => matchingScore = value; }
-        public int MatchingIndex { get => matchingIndex; set => matchingIndex = value; }
+        public string ClosestSentence { get; set; }
+        public float MatchingScore { get; set; }
+        public int MatchingIndex { get; set; }
     }
 }

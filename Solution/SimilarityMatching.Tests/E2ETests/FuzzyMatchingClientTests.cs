@@ -1,9 +1,9 @@
 ﻿using FuzzyMatching.Algorithms;
 using FuzzyMatching.Definitions.Models;
-using System;
+using FuzzyMatching.Definitions.Models.Enums;
+using Microsoft.VisualBasic.FileIO;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+using System.Threading.Tasks;
 using Xunit;
 
 
@@ -11,47 +11,80 @@ namespace FuzzyMatching.Tests.E2ETests
 {
     public class FuzzyMatchingClientTests
     {
-        [Fact]
-        public void TestAlgorithm()
+        public static TheoryData FuzzyMatchingClientTestData()
         {
-            var storageOptions = new StorageOptions();
-            // local storage
-            //storageOptions.StorageType = FuzzyMatching.Definitions.Models.Enums.StorageType.Local;
-            //storageOptions.BaseDirectory = @"C:\Users\karim\Documents\GitHub\FuzzyMatching";
-
-            storageOptions.StorageType = FuzzyMatching.Definitions.Models.Enums.StorageType.Blob;
-            storageOptions.ConnectionString = "DefaultEndpointsProtocol=https;AccountName=fuzzytest12;AccountKey=p3h+kwNL/2V5Hx7yn73NxX6b0Nkx9elcu6CoR65Hojf3qYO6Iq23Vd9GjTkWLLNieYMKJ7alWYKpLL+6o28Z6Q==;EndpointSuffix=core.windows.net";
-            storageOptions.ContainerName = "container";
-            var fuzzyMatcher = new FuzzyMatchingClient(storageOptions);
-
-            int[] sizes = new int[6] { 10, 100, 1000, 10000, 25000, 50000 };
-
-
-            List<string> rawData = new List<string>();
-
-
-            foreach (var size in sizes)
+            // prepare input
+            var datasetLocation = @"C:\Users\v-moshaban\Desktop\FuzzyMatchingDotNet\Solution\SimilarityMatching.Tests\TestData\largeDataset.csv";
+            var dataset = ReadDatasetFromCSV(datasetLocation);
+            var randomSentenceIndex = 5;
+            var sentenceToMatch = dataset[randomSentenceIndex];
+            var storageOptions = new StorageOptions
             {
-                var readerUtterance = new StreamReader(File.OpenRead(@"C:\Users\karim\Documents\GitHub\FuzzyMatching\largeDataset.csv"));
-                readerUtterance.ReadLine();
-                for (int i = 0; i < size; i++)
+                StorageType = StorageType.Local,
+                BaseDirectory = ".",
+                ConnectionString = "",
+                ContainerName = ""
+            };
+
+            // expected
+            var expected = new FuzzyMatchingResult
+            {
+                ClosestSentence = dataset[randomSentenceIndex],
+                MatchingIndex = randomSentenceIndex
+            };
+
+
+            return new TheoryData<List<string>, string, StorageOptions, FuzzyMatchingResult>
+            {
                 {
-                    var line = readerUtterance.ReadLine();
-                    var values = line.Split(',');
-                    rawData.Add(values[1]);
+                    dataset,
+                    sentenceToMatch,
+                    storageOptions,
+                    expected
                 }
+            };
+        }
 
+        [Theory]
+        [MemberData(nameof(FuzzyMatchingClientTestData))]
+        public void FuzzyMatchingClientTestAsync(List<string> dataset, string sentenceToMatch, StorageOptions storageOptions, FuzzyMatchingResult expected)
+        {
+            // create client
+            var fuzzyMatchingClient = new FuzzyMatchingClient(storageOptions);
 
-                Console.WriteLine("Dataset Loaded !!");
-                string name = "mydataset";
-                fuzzyMatcher.PreprocessAsync(name, "", rawData);
-                DateTime start = DateTime.Now;
-                var result = fuzzyMatcher.MatchSentenceAsync("take record", "", name).GetAwaiter().GetResult();
-                DateTime end = DateTime.Now;
-                TimeSpan ts = (end - start);
-                Console.WriteLine("Elapsed Time for the program with size {0} is {1} s", size, ts.TotalSeconds);
-                Console.WriteLine(result.ClosestSentence);
-                rawData.Clear();
+            // process dataset
+            var datasetName = "someDataset";
+            fuzzyMatchingClient.PreprocessDataset(dataset, datasetName);
+
+            // runtime
+            var result = fuzzyMatchingClient.MatchSentence(sentenceToMatch, datasetName);
+
+            // assert
+            Assert.Equal(result.ClosestSentence, expected.ClosestSentence);
+            Assert.Equal(result.MatchingIndex, expected.MatchingIndex);
+        }
+
+        private static List<string> ReadDatasetFromCSV(string filePath, int limit = 30000)
+        {
+            // init result
+            var result = new List<string>();
+
+            // init parser
+            var parser = new TextFieldParser(filePath);
+            parser.TextFieldType = FieldType.Delimited;
+            parser.SetDelimiters(new string[] { ";" });
+            parser.ReadFields(); // skip first line -> headers
+
+            // read data
+            var counter = 1;
+            while (!parser.EndOfData && counter <= limit)
+            {
+                var row = parser.ReadFields(); // string[]
+                result.Add(row[1]);
             }
-    }
 
+            return result;
+        }
+
+    }
+}

@@ -8,6 +8,7 @@
   <ItemGroup>
 	 <PackageReference Include="Azure.Storage.Blobs" Version="12.8.1" />
 	 <PackageReference Include="MathNet.Numerics" Version="4.15.0" />
+	 <PackageReference Include="protobuf-net" Version="3.0.101" />
   </ItemGroup>
 
 	

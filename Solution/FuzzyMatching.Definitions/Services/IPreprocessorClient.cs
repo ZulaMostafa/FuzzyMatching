@@ -5,6 +5,6 @@ namespace FuzzyMatching.Definitions.Services
 {
     public interface IPreprocessorClient
     {
-        public PreprocessedDataset CreateFeatureMatrix(List<string> dataset);
+        public ProcessedDataset PreprocessDataset(List<string> dataset);
     }
 }

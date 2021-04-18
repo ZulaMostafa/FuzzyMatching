@@ -3,7 +3,6 @@
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
 using System;
 using System.Collections.Generic;
@@ -16,7 +15,7 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
      * some notes:
      *      - we use file exists in all reading methods, in order to throw our custom exception in case file wan't found
      */
-    public class BlobStorageService : IStorageService
+    public class BlobStorageService //: IStorageService
     {
         private readonly BlobContainerClient _blobContainerClient;
 
@@ -29,12 +28,12 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
                 if (!_blobContainerClient.Exists())
                 {
                     throw new FileLoadException();
-                   // throw new BlobContainerNotFoundException(containerName);
+                    // throw new BlobContainerNotFoundException(containerName);
                 }
             }
             catch (Exception e) when (e is RequestFailedException || e is FormatException || e is AggregateException)
             {
-                throw new Exception() ;
+                throw new Exception();
             }
         }
 
@@ -97,11 +96,11 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
         }
 
-        public async Task<Stream> ReadFromAbsolutePathAsync(string fileName , string location)
+        public async Task<Stream> ReadFromAbsolutePathAsync(string fileName, string location)
         {
             var relativePath = Path.Combine(fileName, location);
             return await ReadFileAsync(relativePath);
-            
+
         }
 
         public async Task<bool> FileExists(string fileName)
@@ -112,7 +111,7 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             });
         }
 
-       
+
 
         public async Task StoreDataToDirectoryAsync(Object data, string location, string fileName)
         {
@@ -122,9 +121,9 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
 
 
 
-         
-    
-        public async Task StoreObjectAsync(Object data, string fileName, string location)
+
+
+        public async Task StoreBinaryObjectAsync(Object data, string fileName, string location)
         {
             await StoreDataToDirectoryAsync(data, location, fileName);
             return;
@@ -134,16 +133,16 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
         public async Task<string[]> ListPreprocessedDatasetsAsync(string location)
         {
             return await ListFilesAsync();
-            
+
         }
 
-        public async Task<Object> LoadObjectAsync(string name, string location)
+        public async Task<Object> LoadBinaryObjectAsync(string name, string location)
         {
-           return await ReadFromAbsolutePathAsync(name, location);
-        
+            return await ReadFromAbsolutePathAsync(name, location);
+
         }
 
-       
-        
+
+
     }
 }

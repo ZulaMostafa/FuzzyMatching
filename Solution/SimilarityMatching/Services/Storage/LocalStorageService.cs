@@ -1,23 +1,11 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-//using Microsoft.CogSLanguageUtilities.Definitions.APIs.Services;
-//using Microsoft.CogSLanguageUtilities.Definitions.Exceptions.Storage;
-//using Microsoft.CogSLanguageUtilities.Definitions.Models.Enums.Storage;
 using FuzzyMatching.Definitions.Services;
+using ProtoBuf;
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using FuzzyMatching.Definitions.Models;
 
 namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
 {
-    /*
-    * some notes:
-    *      - we use file exists in all reading methods, in order to throw our custom exception in case file wan't found
-    */
     public class LocalStorageService : IStorageService
     {
         private readonly string _targetDirectory;
@@ -26,133 +14,43 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
         {
             if (!Directory.Exists(targetDirectory))
             {
-                throw new FileNotFoundException();
-                //throw new FolderNotFoundException(targetDirectory);
+                throw new DirectoryNotFoundException();
             }
             _targetDirectory = targetDirectory;
         }
 
-        public async Task<string[]> ListFilesAsync(string fileName)
-        {
-            string filePath = Path.Combine(_targetDirectory, fileName);
-            return await Task.FromResult(Directory.GetFiles(filePath).Select(i => Path.GetFileName(i)).ToArray());
-        }
-
-        public async Task<Object> ReadFileAsync(string fileName)
-        {
-            string filePath = Path.Combine(_targetDirectory, fileName);
-            if (await FileExists(fileName))
-            {
-                try
-                {
-                   IFormatter formatter = new BinaryFormatter();
-                   Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                   return  await Task.FromResult( formatter.Deserialize(stream));
-                    
-                   
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    throw new UnauthorizedAccessException();
-                    //throw new UnauthorizedFileAccessException(AccessType.Read.ToString(), Path.Combine(_targetDirectory, fileName));
-                }
-            }
-            else
-            {
-                throw new FileNotFoundException();
-                //throw new Definitions.Exceptions.Storage.FileNotFoundException(filePath);
-            }
-        }
-
-        public async Task<string> ReadFileAsStringAsync(string fileName)
-        {
-            var filePath = Path.Combine(_targetDirectory, fileName);
-            if (await FileExists(fileName))
-            {
-                return await File.ReadAllTextAsync(filePath);
-            }
-            else
-            {
-                throw new FileNotFoundException();
-                //throw new Definitions.Exceptions.Storage.FileNotFoundException(filePath);
-            }
-        }
-
-        public  void StoreDataAsync(Object data, string fileName)
+        public void StoreBinaryObject<T>(T data, string fileName, string relativePath)
         {
             try
             {
-               
-                IFormatter formatter = new BinaryFormatter();
-                string filePath = Path.Combine(_targetDirectory, fileName);
-                Stream stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-                formatter.Serialize(stream, data);
-                stream.Close();
-               
-                
-               
+                var fullPath = Path.Combine(_targetDirectory, relativePath, fileName);
+                var file = File.Create(fullPath);
+                Serializer.Serialize(file, data);
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception e)
             {
-                
-                throw new UnauthorizedAccessException();
-                //throw new UnauthorizedFileAccessException(AccessType.Write.ToString(), fileName);
+                throw new FileNotFoundException(e.Message);
             }
         }
 
-        public async Task<Object> ReadFromAbsolutePathAsync(string DatasetName, string Location)
+        public T LoadBinaryObject<T>(string fileName, string relativePath)
         {
-            var relativePath = Path.Combine(DatasetName, Location);
-            
-                return await ReadFileAsync(relativePath);
-               
-            
+            try
+            {
+                var fullPath = Path.Combine(_targetDirectory, relativePath, fileName);
+                var file = File.OpenRead(fullPath);
+                return Serializer.Deserialize<T>(file);
+            }
+            catch (Exception e)
+            {
+                throw new FileNotFoundException(e.Message);
+            }
         }
 
-        public Task<bool> FileExists(string fileName)
+        public string[] ListPreprocessedDatasets(string Location)
         {
-            var filePath = Path.Combine(_targetDirectory, fileName);
-            return Task.FromResult(File.Exists(filePath));
-        }
-
-        private Task<bool> FileExistsAbsolutePath(string filePath)
-        {
-            return Task.FromResult(File.Exists(filePath));
-        }
-
-        public Task CreateDirectoryAsync(string location)
-        {
-            var completePath = Path.Combine(_targetDirectory, location);
-            Directory.CreateDirectory(completePath);
-            return Task.CompletedTask;
-        }
-
-        public async Task StoreDataToDirectoryAsync(Object data, string location, string fileName)
-        {
-            var relativePath = Path.Combine(location, fileName);
-             StoreDataAsync(data, relativePath);
-        }
-
-
-        public async Task<Object> LoadObjectAsync(string name, string Location)
-        {
-            return await ReadFromAbsolutePathAsync(name, Location);
-
-        }
-
-       
-        public async Task StoreObjectAsync(Object data, string fileName, string location)
-        {
-            await StoreDataToDirectoryAsync(data, location, fileName);
-            return;
-        }
-
-       
-
-        public async Task<string[]> ListPreprocessedDatasetsAsync(string Location)
-        {
-            return await ListFilesAsync(Location);
-            
+            string folderPath = Path.Combine(_targetDirectory, Location);
+            return Directory.GetFiles(folderPath).Select(i => Path.GetFileName(i)).ToArray();
         }
     }
 }

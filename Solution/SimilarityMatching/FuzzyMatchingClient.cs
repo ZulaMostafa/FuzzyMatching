@@ -1,86 +1,71 @@
 ﻿using FuzzyMatching.Core.Factories;
+using FuzzyMatching.Core.Preprocessor;
+using FuzzyMatching.Core.RunTime;
 using FuzzyMatching.Definitions;
 using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FuzzyMatching.Algorithms
 {
     public class FuzzyMatchingClient : IFuzzyMatchingClient
     {
+        private PreprocessorClient PreprocessorClient;
+        private RuntimeClient RuntimeClient;
         private IStorageService StorageService;
-      
-        public FuzzyMatchingClient( StorageOptions storageOptions)
+
+        public FuzzyMatchingClient(StorageOptions storageOptions)
         {
             StorageService = StorageFactory.create(storageOptions);
+            PreprocessorClient = new PreprocessorClient();
+            RuntimeClient = new RuntimeClient();
         }
 
-       
-       
-
-        private void loadDataset(int size, string path)
+        public void PreprocessDataset(List<string> dataset, string datasetName, string relativeDirectory = "")
         {
-
-        
-        }
-        
-
-
-
-        
-        public  async Task<bool> PreprocessAsync(string datasetName, string location, List<string> dataset)
-        {
-            var preprocessor = new Core.Preprocessor.PreprocessorClient();
-           
             // create feature matrix
-            var matrices=   preprocessor.CreateFeatureMatrix(dataset);
-            // store feature matrix
-           
-            await StorageService.StoreObjectAsync(matrices, datasetName + "_PreProcessed", location);
-            await StorageService.StoreObjectAsync(dataset, datasetName + "_Dataset", location);
- 
-            return await  Task.FromResult(true);
+            var preprocessedDataset = PreprocessorClient.PreprocessDataset(dataset);
 
+            // store preprocessed data
+            StorageService.StoreBinaryObject(preprocessedDataset, datasetName + "_PreProcessed", relativeDirectory);
+            StorageService.StoreBinaryObject(dataset, datasetName + "_Dataset", relativeDirectory);
         }
 
-     
-
-        public async Task<FuzzyMatchingResult> MatchSentenceAsync(string sentence, string location, string datasetName)
+        public FuzzyMatchingResult MatchSentence(string sentence, string datasetName, string relativeDirectory = "")
         {
-            var runTime = new Core.RunTime.RuntimeClient();
-            PreprocessedDataset matrices;
             try
             {
-                 matrices = (PreprocessedDataset)StorageService.LoadObjectAsync(datasetName + "_PreProcessed", location).GetAwaiter().GetResult();
+                // try to get the preprocessed dataset
+                var preprocessedDataset = StorageService.LoadBinaryObject<ProcessedDataset>(datasetName + "_PreProcessed", relativeDirectory);
+                var dataset = StorageService.LoadBinaryObject<List<string>>(datasetName + "_Dataset", relativeDirectory);
+                // run matching algorithm
+                return RuntimeClient.MatchSentence(sentence, preprocessedDataset, dataset);
             }
             catch (FileNotFoundException)
             {
                 try
                 {
-                    var data = (List<string>)StorageService.LoadObjectAsync(datasetName + "_Dataset", location).GetAwaiter().GetResult();
-                    await PreprocessAsync(datasetName, location, data);
-                    matrices = (PreprocessedDataset)StorageService.LoadObjectAsync(datasetName + "_PreProcessed", location).GetAwaiter().GetResult();
-                    return runTime.MatchSentence(sentence, matrices, data);
+                    // load original dataset
+                    var dataset = StorageService.LoadBinaryObject<List<string>>(datasetName + "_Dataset", relativeDirectory);
+                    // run preprocessing
+                    PreprocessDataset(dataset, datasetName, relativeDirectory);
+                    // load preprocessed
+                    var preprocessedDataset = StorageService.LoadBinaryObject<ProcessedDataset>(datasetName + "_PreProcessed", relativeDirectory);
+                    // run matching algorithm
+                    return RuntimeClient.MatchSentence(sentence, preprocessedDataset, dataset);
                 }
-                catch(FileNotFoundException)
+                catch (FileNotFoundException)
                 {
+                    // this means original dataset wasn't found!
                     throw new FileNotFoundException();
                 }
             }
-            var dataset = (List<string>)StorageService.LoadObjectAsync(datasetName + "_Dataset", location).GetAwaiter().GetResult();
-            // return
-            return runTime.MatchSentence(sentence,matrices , dataset);
         }
 
-        public List<string> ListPreProcessedDatasets(string directory)
+        public string[] ListPreProcessedDatasets(string directory)
         {
-            return  StorageService.ListPreprocessedDatasetsAsync(directory).GetAwaiter().GetResult().ToList();
+            return StorageService.ListPreprocessedDatasets(directory);
         }
-
-      
     }
 }
