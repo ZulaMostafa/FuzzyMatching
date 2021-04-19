@@ -25,10 +25,10 @@ namespace FuzzyMatching.Algorithms
         public void PreprocessDataset(List<string> dataset, string datasetName, string relativeDirectory = "")
         {
             // create feature matrix
-            var preprocessedDataset = PreprocessorClient.PreprocessDataset(dataset);
+            var processedDataset = PreprocessorClient.PreprocessDataset(dataset);
 
             // store preprocessed data
-            StorageService.StoreBinaryObject(preprocessedDataset, datasetName + "_PreProcessed", relativeDirectory);
+            StorageService.StoreBinaryObject(processedDataset, datasetName + "_PreProcessed", relativeDirectory);
             StorageService.StoreBinaryObject(dataset, datasetName + "_Dataset", relativeDirectory);
         }
 
@@ -37,10 +37,10 @@ namespace FuzzyMatching.Algorithms
             try
             {
                 // try to get the preprocessed dataset
-                var preprocessedDataset = StorageService.LoadBinaryObject<ProcessedDataset>(datasetName + "_PreProcessed", relativeDirectory);
+                var processedDataset = StorageService.LoadBinaryObject<ProcessedDataset>(datasetName + "_PreProcessed", relativeDirectory);
                 var dataset = StorageService.LoadBinaryObject<List<string>>(datasetName + "_Dataset", relativeDirectory);
                 // run matching algorithm
-                return RuntimeClient.MatchSentence(sentence, preprocessedDataset, dataset);
+                return RuntimeClient.MatchSentence(sentence, processedDataset, dataset);
             }
             catch (FileNotFoundException)
             {

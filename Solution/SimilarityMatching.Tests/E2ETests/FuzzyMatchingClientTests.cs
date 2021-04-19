@@ -3,7 +3,6 @@ using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Models.Enums;
 using Microsoft.VisualBasic.FileIO;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xunit;
 
 
@@ -21,7 +20,7 @@ namespace FuzzyMatching.Tests.E2ETests
             var storageOptions = new StorageOptions
             {
                 StorageType = StorageType.Local,
-                BaseDirectory = ".",
+                BaseDirectory = @"C:\Users\v-moshaban\Desktop\FuzzBuzz\word_dir",
                 ConnectionString = "",
                 ContainerName = ""
             };
@@ -72,7 +71,7 @@ namespace FuzzyMatching.Tests.E2ETests
             // init parser
             var parser = new TextFieldParser(filePath);
             parser.TextFieldType = FieldType.Delimited;
-            parser.SetDelimiters(new string[] { ";" });
+            parser.SetDelimiters(new string[] { "," });
             parser.ReadFields(); // skip first line -> headers
 
             // read data
@@ -81,6 +80,7 @@ namespace FuzzyMatching.Tests.E2ETests
             {
                 var row = parser.ReadFields(); // string[]
                 result.Add(row[1]);
+                counter++;
             }
 
             return result;
