@@ -1,6 +1,6 @@
 ﻿namespace FuzzyMatching.Definitions.Models
 {
-    public class FuzzyMatchingResult
+    public class MatchingResult
     {
         public string ClosestSentence { get; set; }
         public float MatchingScore { get; set; }

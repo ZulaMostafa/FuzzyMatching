@@ -1,13 +1,12 @@
 ﻿using FuzzyMatching.Core.Factories;
-using FuzzyMatching.Core.Preprocessor;
-using FuzzyMatching.Core.RunTime;
+using FuzzyMatching.Core.Services;
 using FuzzyMatching.Definitions;
 using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
 using System.Collections.Generic;
 using System.IO;
 
-namespace FuzzyMatching.Algorithms
+namespace FuzzyMatching.Core
 {
     public class FuzzyMatchingClient : IFuzzyMatchingClient
     {
@@ -32,7 +31,7 @@ namespace FuzzyMatching.Algorithms
             StorageService.StoreBinaryObject(dataset, datasetName + "_Dataset", relativeDirectory);
         }
 
-        public FuzzyMatchingResult MatchSentence(string sentence, string datasetName, string relativeDirectory = "")
+        public MatchingResult MatchSentence(string sentence, string datasetName, string relativeDirectory = "")
         {
             try
             {
@@ -63,7 +62,7 @@ namespace FuzzyMatching.Algorithms
             }
         }
 
-        public string[] ListPreProcessedDatasets(string directory)
+        public string[] ListProcessedDatasets(string directory)
         {
             return StorageService.ListPreprocessedDatasets(directory);
         }

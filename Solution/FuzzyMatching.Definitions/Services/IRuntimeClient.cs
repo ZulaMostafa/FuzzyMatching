@@ -5,6 +5,6 @@ namespace FuzzyMatching.Definitions.Services
 {
     public interface IRuntimeClient
     {
-        public FuzzyMatchingResult MatchSentence(string sentence, ProcessedDataset processedDataset, List<string> Dataset, int ngramsLength);
+        public MatchingResult MatchSentence(string sentence, ProcessedDataset processedDataset, List<string> dataset, int ngramsLength);
     }
 }

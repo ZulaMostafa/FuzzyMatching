@@ -26,14 +26,14 @@ namespace FuzzyMatching.Tests.E2ETests
             };
 
             // expected
-            var expected = new FuzzyMatchingResult
+            var expected = new MatchingResult
             {
                 ClosestSentence = dataset[randomSentenceIndex],
                 MatchingIndex = randomSentenceIndex
             };
 
 
-            return new TheoryData<List<string>, string, StorageOptions, FuzzyMatchingResult>
+            return new TheoryData<List<string>, string, StorageOptions, MatchingResult>
             {
                 {
                     dataset,
@@ -46,7 +46,7 @@ namespace FuzzyMatching.Tests.E2ETests
 
         [Theory]
         [MemberData(nameof(FuzzyMatchingClientTestData))]
-        public void FuzzyMatchingClientTestAsync(List<string> dataset, string sentenceToMatch, StorageOptions storageOptions, FuzzyMatchingResult expected)
+        public void FuzzyMatchingClientTestAsync(List<string> dataset, string sentenceToMatch, StorageOptions storageOptions, MatchingResult expected)
         {
             // create client
             var fuzzyMatchingClient = new FuzzyMatchingClient(storageOptions);

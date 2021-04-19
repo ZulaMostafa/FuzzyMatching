@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace FuzzyMatching.Core.FeatureMatrixCalculation
+namespace FuzzyMatching.Core.Utilities.FeatureMatrixOperations
 {
     public static class TFCalculator
     {
@@ -29,17 +29,12 @@ namespace FuzzyMatching.Core.FeatureMatrixCalculation
                     result[i] = 0;
                 }
             }
-
-
-
             return result;
-
         }
 
         public static float[][] CalculateTFVectorBatchAsync(Dictionary<string, int>[] sentenceDatasetNGramFrequencies, string[] allDataUniqueNGramsVector)
         {
             return sentenceDatasetNGramFrequencies.AsParallel().Select(sentenceNGramsFrequencies => CalculateTFVectorAsync(sentenceNGramsFrequencies, allDataUniqueNGramsVector)).ToArray();
-
         }
     }
 }

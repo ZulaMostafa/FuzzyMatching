@@ -1,12 +1,11 @@
-﻿
-using FuzzyMatching.Core.FeatureMatrixCalculation;
-using FuzzyMatching.Core.MatrixOperations;
+﻿using FuzzyMatching.Core.Utilities.FeatureMatrixOperations;
+using FuzzyMatching.Core.Utilities.MatrixOperations;
 using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FuzzyMatching.Core.Preprocessor
+namespace FuzzyMatching.Core.Services
 {
     public class PreprocessorClient : IPreprocessorClient
     {
@@ -15,18 +14,17 @@ namespace FuzzyMatching.Core.Preprocessor
             var calculatedFeaturesMatrices = new ProcessedDataset();
             // calculate ngrams for each sentence
             var ngramsLength = 3;
-            var inputSentenceDatasetNGrams = NGramsCalculator.GetSentenceNGramsBatchAsync(dataset, ngramsLength);//.GetAwaiter().GetResult();
+            var inputSentenceDatasetNGrams = NGramsCalculator.GetSentenceNGramsBatchAsync(dataset, ngramsLength);
 
             // calculate ngram frequencies
-            var inputSentenceDatasetNGramFrequencies = FrequencyCalculator.GetNGramFrequencyBatchAsync(inputSentenceDatasetNGrams);//.GetAwaiter().GetResult();
-            //var allSenteceList = inputSentenceDatasetNGrams.Append(inputSentenceNGrams).ToArray();
+            var inputSentenceDatasetNGramFrequencies = FrequencyCalculator.GetNGramFrequencyBatchAsync(inputSentenceDatasetNGrams);
             var overallDataNgramFrequencies = FrequencyCalculator.GetOverallNGramFrequencyAsync(inputSentenceDatasetNGrams).GetAwaiter().GetResult();
 
             // get ngrams feature vector
             var allDataUniqueNGramsVector = overallDataNgramFrequencies.Keys.ToArray();
 
             // calculate TF
-            var inputSentenceDatasetTFMatrix = TFCalculator.CalculateTFVectorBatchAsync(inputSentenceDatasetNGramFrequencies, allDataUniqueNGramsVector);//.GetAwaiter().GetResult();
+            var inputSentenceDatasetTFMatrix = TFCalculator.CalculateTFVectorBatchAsync(inputSentenceDatasetNGramFrequencies, allDataUniqueNGramsVector);
 
             // calculate IDF
             int overallDataLength = dataset.Count + 1;
@@ -38,10 +36,10 @@ namespace FuzzyMatching.Core.Preprocessor
             // get scalar values
             var inputSentenceDataseetAbsoluteValues = DotProductCalculator.CalculateVectorAbsoluteValueBatch(inputSentenceDatasetTFIDFMatrix);
 
-            calculatedFeaturesMatrices.InputSentenceDataseetAbsoluteValues = inputSentenceDataseetAbsoluteValues;
-            calculatedFeaturesMatrices.InputSentenceDatasetTFIDFMatrix = inputSentenceDatasetTFIDFMatrix;
-            calculatedFeaturesMatrices.OverallDataIDFVector = overallDataIDFVector;
-            calculatedFeaturesMatrices.AllDataUniqueNGramsVector = allDataUniqueNGramsVector;
+            calculatedFeaturesMatrices.TFIDFMatrixAbsoluteValues = inputSentenceDataseetAbsoluteValues;
+            calculatedFeaturesMatrices.TFIDFMatrix = inputSentenceDatasetTFIDFMatrix;
+            calculatedFeaturesMatrices.IDFVector = overallDataIDFVector;
+            calculatedFeaturesMatrices.UniqueNGramsVector = allDataUniqueNGramsVector;
 
             return calculatedFeaturesMatrices;
         }

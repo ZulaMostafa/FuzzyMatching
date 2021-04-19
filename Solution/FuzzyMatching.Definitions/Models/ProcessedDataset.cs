@@ -6,12 +6,12 @@ namespace FuzzyMatching.Definitions.Models
     public class ProcessedDataset
     {
         [ProtoMember(1)]
-        public float[][] InputSentenceDatasetTFIDFMatrix { get; set; }
+        public float[][] TFIDFMatrix { get; set; }
         [ProtoMember(2)]
-        public float[] InputSentenceDataseetAbsoluteValues { get; set; }
+        public float[] TFIDFMatrixAbsoluteValues { get; set; }
         [ProtoMember(3)]
-        public float[] OverallDataIDFVector { get; set; }
+        public float[] IDFVector { get; set; }
         [ProtoMember(4)]
-        public string[] AllDataUniqueNGramsVector { get; set; }
+        public string[] UniqueNGramsVector { get; set; }
     }
 }

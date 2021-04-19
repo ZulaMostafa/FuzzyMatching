@@ -1,40 +1,41 @@
-﻿using FuzzyMatching.Core.FeatureMatrixCalculation;
-using FuzzyMatching.Core.MatrixOperations;
+﻿using FuzzyMatching.Core.Utilities.FeatureMatrixOperations;
+using FuzzyMatching.Core.Utilities.MatrixOperations;
 using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FuzzyMatching.Core.RunTime
+namespace FuzzyMatching.Core.Services
 {
     public class RuntimeClient : IRuntimeClient
     {
-        public FuzzyMatchingResult MatchSentence(string sentence, ProcessedDataset processedDataset, List<string> Dataset, int ngramsLength = 3)
+        public MatchingResult MatchSentence(string sentence, ProcessedDataset processedDataset, List<string> Dataset, int ngramsLength = 3)
         {
             // calculate ngrams for the sentence
             var inputSentenceNGrams = NGramsCalculator.GetSentenceNGramsAsync(sentence, ngramsLength);
-            
+
             // calculate ngrams frequencies 
             var inputSentenceNGramFrequencies = FrequencyCalculator.GetNGramFrequencyAsync(inputSentenceNGrams);
-            
+
             // calculate TF vector
-            var inputSentenceTFVectorDataset = TFCalculator.CalculateTFVectorAsync(inputSentenceNGramFrequencies, processedDataset.AllDataUniqueNGramsVector);
-            
+            var inputSentenceTFVectorDataset = TFCalculator.CalculateTFVectorAsync(inputSentenceNGramFrequencies, processedDataset.UniqueNGramsVector);
+
             // calculate TF-IDF vector
-            var inputSentenceTFIDFVectorDataset = CellOperations.MultiplyVectorCells(inputSentenceTFVectorDataset, processedDataset.OverallDataIDFVector);
-            
+            var inputSentenceTFIDFVectorDataset = CellOperations.MultiplyVectorCells(inputSentenceTFVectorDataset, processedDataset.IDFVector);
+
             // get absolute value
             var inputSentenceAbsoluteValue = DotProductCalculator.GetVectorAbsoluteValue(inputSentenceTFIDFVectorDataset);
-            
+
             // calculate similarity
-            var similarityValues = DotProductCalculator.CalculateDotProduct(inputSentenceTFIDFVectorDataset, inputSentenceAbsoluteValue, processedDataset.InputSentenceDatasetTFIDFMatrix, processedDataset.InputSentenceDataseetAbsoluteValues);
+            var similarityValues = DotProductCalculator.CalculateDotProduct(inputSentenceTFIDFVectorDataset, inputSentenceAbsoluteValue, processedDataset.TFIDFMatrix, processedDataset.TFIDFMatrixAbsoluteValues);
 
             // get most matching one (match string, score, index)
             float minValue = similarityValues.Min();
             int minIndex = similarityValues.ToList().IndexOf(minValue);
 
             // return
-            return new FuzzyMatchingResult {
+            return new MatchingResult
+            {
                 MatchingIndex = minIndex,
                 MatchingScore = minValue,
                 ClosestSentence = Dataset[minIndex]

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace FuzzyMatching.Core.FeatureMatrixCalculation
+namespace FuzzyMatching.Core.Utilities.FeatureMatrixOperations
 {
     public static class NGramsCalculator
     {
@@ -16,7 +16,6 @@ namespace FuzzyMatching.Core.FeatureMatrixCalculation
         /// <returns></returns>
         public static string[] GetSentenceNGramsAsync(string sentence, int ngramsLength = 3)
         {
-
             var result = new List<string>();
 
             for (var i = 0; i < sentence.Length - ngramsLength + 1; i++)
@@ -25,23 +24,11 @@ namespace FuzzyMatching.Core.FeatureMatrixCalculation
             }
 
             return result.ToArray();
-
         }
 
         public static string[][] GetSentenceNGramsBatchAsync(List<string> sentenceList, int ngramsLength = 3)
         {
-
-
             return sentenceList.AsParallel().Select(sentence => GetSentenceNGramsAsync(sentence, ngramsLength)).ToArray();
-
-
-
-
-        }
-
-        public static HashSet<string> GetAllUniqueNGrams(List<List<string>> senteceListNgrams)
-        {
-            return null;
         }
     }
 }
