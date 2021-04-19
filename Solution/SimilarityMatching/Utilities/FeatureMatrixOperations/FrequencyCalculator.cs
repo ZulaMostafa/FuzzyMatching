@@ -32,8 +32,10 @@ namespace FuzzyMatching.Core.Utilities.FeatureMatrixOperations
         {
 
             var result = new Dictionary<string, int>();
-            var tasks = sentenceListNGrams.Select(async sentenceNGrams => {
-                var task = sentenceNGrams.Select(async ngram => {
+            var tasks = sentenceListNGrams.Select(async sentenceNGrams =>
+            {
+                var task = sentenceNGrams.Select(async ngram =>
+                {
                     if (result.ContainsKey(ngram))
                     {
                         result[ngram] += 1;

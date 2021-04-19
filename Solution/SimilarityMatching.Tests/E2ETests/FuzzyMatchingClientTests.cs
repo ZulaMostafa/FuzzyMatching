@@ -1,4 +1,4 @@
-﻿using FuzzyMatching.Algorithms;
+﻿using FuzzyMatching.Core;
 using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Models.Enums;
 using Microsoft.VisualBasic.FileIO;
