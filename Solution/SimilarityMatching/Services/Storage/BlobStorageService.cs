@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
@@ -10,10 +8,6 @@ using System.Threading.Tasks;
 
 namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
 {
-    /*
-     * some notes:
-     *      - we use file exists in all reading methods, in order to throw our custom exception in case file wan't found
-     */
     public class BlobStorageService //: IStorageService
     {
         private readonly BlobContainerClient _blobContainerClient;
