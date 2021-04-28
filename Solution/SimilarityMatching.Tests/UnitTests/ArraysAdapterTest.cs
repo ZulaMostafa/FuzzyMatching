@@ -35,8 +35,8 @@ new float[] { 0, 0,6,0 }
         [MemberData(nameof(TestLocalStorageServiceArrays))]
         public void TestLocalStorageService(float[][] array2D,int height,int width)
         {
-            var spreadArray = ArraysAdapter.Make1DArray<float>(array2D);
-            var unrolledMatrix = ArraysAdapter.Make2DArray<float>(spreadArray,height,width);
+            var spreadArray = ArraysAdapter.Make1DArray(array2D);
+            var unrolledMatrix = ArraysAdapter.Make2DArray(spreadArray,height,width);
             for (int i =0; i < height;i++)
             {
                 for (int j = 0; j<width;j++)

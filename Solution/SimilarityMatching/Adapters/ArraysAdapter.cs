@@ -6,7 +6,7 @@ namespace FuzzyMatching.Core.Adapters
 {
     public static class ArraysAdapter
     {
-        public static float[][] Make2DArray<T>(float[] input, int height, int width)
+        public static float[][] Make2DArray(float[] input, int height, int width)
         {
             float[,] output = new float[height, width];
             // i -> k/cols
@@ -34,7 +34,7 @@ namespace FuzzyMatching.Core.Adapters
             var result = ToJaggedArray<float>(output);
             return result;
         }
-        public static float[] Make1DArray<T>(float[][] input)
+        public static float[] Make1DArray(float[][] input)
         {
             var rows = input.Length;
             var columns = input[0].Length;

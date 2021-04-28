@@ -10,7 +10,7 @@ namespace FuzzyMatching.Core.Adapters
         public static StoredProcessedDataset ProcessedToStored (ProcessedDataset processedDataset)
         {
             var storedDataset = new StoredProcessedDataset();
-            storedDataset.TFIDFMatrix = ArraysAdapter.Make1DArray<float>(processedDataset.TFIDFMatrix);
+            storedDataset.TFIDFMatrix = ArraysAdapter.Make1DArray(processedDataset.TFIDFMatrix);
             storedDataset.TFIDFMatrixAbsoluteValues = processedDataset.TFIDFMatrixAbsoluteValues;
             storedDataset.IDFVector = processedDataset.IDFVector;
             storedDataset.UniqueNGramsVector = processedDataset.UniqueNGramsVector;
@@ -21,7 +21,7 @@ namespace FuzzyMatching.Core.Adapters
         public static ProcessedDataset StoredToProcessed (StoredProcessedDataset storedDataset)
         {
             var processedDataset = new ProcessedDataset();
-            processedDataset.TFIDFMatrix = ArraysAdapter.Make2DArray<float>(storedDataset.TFIDFMatrix,storedDataset.Height,storedDataset.Width);
+            processedDataset.TFIDFMatrix = ArraysAdapter.Make2DArray(storedDataset.TFIDFMatrix,storedDataset.Height,storedDataset.Width);
             processedDataset.TFIDFMatrixAbsoluteValues = storedDataset.TFIDFMatrixAbsoluteValues;
             processedDataset.IDFVector = storedDataset.IDFVector;
             processedDataset.UniqueNGramsVector = storedDataset.UniqueNGramsVector;

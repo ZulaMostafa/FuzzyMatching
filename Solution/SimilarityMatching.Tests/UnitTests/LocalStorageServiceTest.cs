@@ -21,22 +21,26 @@ namespace FuzzyMatching.Tests.UnitTests
             IStorageService StorageService = StorageFactory.create(storageOptions);
 
 
-            return new TheoryData<int [], int [,]  , IStorageService>
+            return new TheoryData<int []  , IStorageService,int>
             {
                 {
                     array1D,
-                    array2D,
-                    StorageService
+                    StorageService,
+                    array1D.Length
                 }
             };
         }
 
         [Theory]
         [MemberData(nameof(TestLocalStorageServiceArrays))]
-        public void TestLocalStorageService (int [] array1D, int [,] array2D, IStorageService StorageService)
+        public void TestLocalStorageService (int [] array1D, IStorageService StorageService,int length)
         {
             StorageService.StoreBinaryObject(array1D, "1D_array", "");
-            StorageService.StoreBinaryObject(array2D, "2D_array", "");
+            var LoadedArray = StorageService.LoadBinaryObject<int []>( "1D_array", "");
+            for (int i = 0; i < length; i++)
+            {
+                Assert.Equal(array1D[i], LoadedArray[i]);
+            }
         }
     }
 }
