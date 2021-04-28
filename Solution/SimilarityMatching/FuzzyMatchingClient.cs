@@ -1,8 +1,10 @@
-﻿using FuzzyMatching.Core.Factories;
+﻿using FuzzyMatching.Core.Adapters;
+using FuzzyMatching.Core.Factories;
 using FuzzyMatching.Core.Services;
 using FuzzyMatching.Definitions;
 using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -13,6 +15,7 @@ namespace FuzzyMatching.Core
         private PreprocessorClient PreprocessorClient;
         private RuntimeClient RuntimeClient;
         private IStorageService StorageService;
+        private float[] temp;
 
         public FuzzyMatchingClient(StorageOptions storageOptions)
         {
@@ -25,19 +28,23 @@ namespace FuzzyMatching.Core
         {
             // create feature matrix
             var processedDataset = PreprocessorClient.PreprocessDataset(dataset);
-
+            temp = processedDataset.IDFVector;
+            var storedDataset = ObjectsAdapter.ProcessedToStored(processedDataset);
             // store preprocessed data
-            StorageService.StoreBinaryObject(processedDataset, datasetName + "_PreProcessed", relativeDirectory);
+            StorageService.StoreBinaryObject(storedDataset, datasetName + "_PreProcessed", relativeDirectory);
             StorageService.StoreBinaryObject(dataset, datasetName + "_Dataset", relativeDirectory);
         }
+
+
 
         public MatchingResult MatchSentence(string sentence, string datasetName, string relativeDirectory = "")
         {
             try
             {
                 // try to get the preprocessed dataset
-                var processedDataset = StorageService.LoadBinaryObject<ProcessedDataset>(datasetName + "_PreProcessed", relativeDirectory);
+                var storedDataset = StorageService.LoadBinaryObject<StoredProcessedDataset>(datasetName + "_PreProcessed", relativeDirectory);
                 var dataset = StorageService.LoadBinaryObject<List<string>>(datasetName + "_Dataset", relativeDirectory);
+                var processedDataset = ObjectsAdapter.StoredToProcessed(storedDataset);
                 // run matching algorithm
                 return RuntimeClient.MatchSentence(sentence, processedDataset, dataset);
             }

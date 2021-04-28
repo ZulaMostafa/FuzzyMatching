@@ -26,6 +26,7 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
                 var fullPath = Path.Combine(_targetDirectory, relativePath, fileName);
                 var file = File.Create(fullPath);
                 Serializer.Serialize(file, data);
+                file.Close();
             }
             catch (Exception e)
             {
@@ -39,7 +40,9 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             {
                 var fullPath = Path.Combine(_targetDirectory, relativePath, fileName);
                 var file = File.OpenRead(fullPath);
-                return Serializer.Deserialize<T>(file);
+                var result = Serializer.Deserialize<T>(file);
+                file.Close();
+                return result;
             }
             catch (Exception e)
             {
