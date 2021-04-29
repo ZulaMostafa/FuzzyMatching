@@ -4,20 +4,20 @@ using FuzzyMatching.Definitions.Models.Enums;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Xunit;
-
 
 namespace FuzzyMatching.Tests.E2ETests
 {
-    public class FuzzyMatchingClientTests
+    public class FuzzyMatchingClientPerfomanceTests
     {
         public static TheoryData FuzzyMatchingClientTestData()
         {
             // prepare input
             var datasetLocation = @"C:\Users\karim\Documents\GitHub\FuzzyMatching\Solution\SimilarityMatching.Tests\TestData\largeDataset.csv";
-            var dataset = ReadDatasetFromCSV(datasetLocation);
-            var randomSentenceIndex = 5;
-            var sentenceToMatch = dataset[randomSentenceIndex];
+         
+           
+            var sentenceToMatch = "take record";
             var storageOptions = new StorageOptions
             {
                 StorageType = StorageType.Local,
@@ -26,49 +26,45 @@ namespace FuzzyMatching.Tests.E2ETests
                 ContainerName = ""
             };
 
-            // expected
-            var expected = new MatchingResult
-            {
-                ClosestSentence = dataset[randomSentenceIndex],
-                MatchingIndex = randomSentenceIndex
-            };
+          
 
+            int[] sizes = new int[6] { 10, 100, 1000, 10000, 25000, 50000 };
 
-            return new TheoryData<List<string>, string, StorageOptions, MatchingResult>
+            return new TheoryData<int[],string, string, StorageOptions>
             {
                 {
-                    dataset,
+                    sizes,
+                    datasetLocation,
                     sentenceToMatch,
-                    storageOptions,
-                    expected
+                    storageOptions
                 }
             };
         }
 
         [Theory]
         [MemberData(nameof(FuzzyMatchingClientTestData))]
-        public void FuzzyMatchingClientTestAsync(List<string> dataset, string sentenceToMatch, StorageOptions storageOptions, MatchingResult expected)
+        public void FuzzyMatchingClientTestAsync(int[] sizes, string datasetLocation, string sentenceToMatch, StorageOptions storageOptions)
         {
-            // create client
-            var fuzzyMatchingClient = new FuzzyMatchingClient(storageOptions);
+            foreach (var size in sizes)
+            {
+                // read dataset
+                var dataset = ReadDatasetFromCSV(datasetLocation, size);
+                // create client
+                var fuzzyMatchingClient = new FuzzyMatchingClient(storageOptions);
 
-            // process dataset
-            var datasetName = "someDataset";
-            fuzzyMatchingClient.PreprocessDataset(dataset, datasetName);
+                // process dataset
+                var datasetName = "someDataset";
+                fuzzyMatchingClient.PreprocessDataset(dataset, datasetName);
 
-            // runtime
-            var result = fuzzyMatchingClient.MatchSentence(sentenceToMatch, datasetName);
+                DateTime start = DateTime.Now;
+                // runtime
+                var result = fuzzyMatchingClient.MatchSentence(sentenceToMatch, datasetName);
+                DateTime end = DateTime.Now;
+                TimeSpan ts = (end - start);
 
-            // assert
-            Assert.Equal(result.ClosestSentence, expected.ClosestSentence);
-            Assert.Equal(result.MatchingIndex, expected.MatchingIndex);
-
-            // print result
-
-            Console.WriteLine("sentence to match : {0}", sentenceToMatch);
-            Console.WriteLine("Matched Sentence : {0}", result.ClosestSentence);
-            Console.WriteLine("Matched Sentence Score : {0}", result.MatchingScore);
-            Console.WriteLine("Matched Sentence Index : {0}", result.MatchingIndex);
+                // print time
+                Console.WriteLine("Elapsed Time for the program with size {0} is {1} s", size, ts.TotalSeconds);
+            }
         }
 
         private static List<string> ReadDatasetFromCSV(string filePath, int limit = 30000)
@@ -93,6 +89,5 @@ namespace FuzzyMatching.Tests.E2ETests
 
             return result;
         }
-
     }
 }
