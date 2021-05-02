@@ -1,7 +1,7 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System.Linq;
 
-namespace FuzzyMatching.Core.Utilities.MatrixOperations
+namespace FuzzyMatching.Core.Utilities.MatrixArithmetics
 {
 
     public static class CellOperations

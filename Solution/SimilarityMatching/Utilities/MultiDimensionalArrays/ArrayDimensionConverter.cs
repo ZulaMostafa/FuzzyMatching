@@ -1,43 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace FuzzyMatching.Core.Adapters
+namespace FuzzyMatching.Core.Utilities.MultiDimensionalArrays
 {
-    public static class ArraysAdapter
+    public static class ArrayDimensionConverter
     {
-        public static float[][] Make2DArray(float[] input, int height, int width)
+        public static float[][] Convert1DArrayTo2DArrayMatrix(float[] source1DArray, int targetHeight, int targetWidth)
         {
-            float[,] output = new float[height, width];
+            float[,] output = new float[targetHeight, targetWidth];
             // i -> k/cols
             //j -> k mod cols 
             var k = 0;
             var index = 0;
-            while (index < input.Length)
+            while (index < source1DArray.Length)
             {
-                if (input[index] == 0)
+                if (source1DArray[index] == 0)
                 {
-                    k += (int)input[index + 1] ;
+                    k += (int)source1DArray[index + 1];
                     index += 2;
                 }
                 else
                 {
-                    var i = (int)k / width; // floor (integer division )
-                    var j = k % width; // (integer )
-                    output[i, j] = input[index];
+                    var i = k / targetWidth; // floor (integer division )
+                    var j = k % targetWidth; // (integer )
+                    output[i, j] = source1DArray[index];
                     k++;
-                    
+
                     index++;
                 }
 
             }
-            var result = ToJaggedArray<float>(output);
+            var result = ToJaggedArray(output);
             return result;
         }
-        public static float[] Make1DArray(float[][] input)
+        public static float[] Convert2DArrayMatrixTo1DArray(float[][] source2DArrayMatrix)
         {
-            var rows = input.Length;
-            var columns = input[0].Length;
+            var rows = source2DArrayMatrix.Length;
+            var columns = source2DArrayMatrix[0].Length;
             var result = new List<float>();
 
 
@@ -47,10 +45,10 @@ namespace FuzzyMatching.Core.Adapters
             while (i < rows && j < columns)
             {
 
-                if (input[i][j] == 0)
+                if (source2DArrayMatrix[i][j] == 0)
                 {
                     var counter = 1;
-                    while (IncrementColumnPointer(columns, rows, ref i, ref j) && input[i][j] == 0)
+                    while (IncrementColumnPointer(columns, rows, ref i, ref j) && source2DArrayMatrix[i][j] == 0)
                     {
                         counter++;
                     }
@@ -60,7 +58,7 @@ namespace FuzzyMatching.Core.Adapters
                 }
                 else
                 {
-                    result.Add(input[i][j]);
+                    result.Add(source2DArrayMatrix[i][j]);
 
                     if (!IncrementColumnPointer(columns, rows, ref i, ref j))
                         break;
@@ -74,7 +72,8 @@ namespace FuzzyMatching.Core.Adapters
         }
 
         /// <summary>
-        /// this function increments the pointer for a matrix in a while loop
+        /// This method increments i, j (row and column pointers)
+        /// when iterating through a matrix
         /// </summary>
         /// <param name="length"> number of rows or columns </param>
         /// <param name="j"> pointer i or j </param>

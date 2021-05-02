@@ -4,7 +4,6 @@ using FuzzyMatching.Definitions.Models.Enums;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace FuzzyMatching.Tests.E2ETests
@@ -15,8 +14,8 @@ namespace FuzzyMatching.Tests.E2ETests
         {
             // prepare input
             var datasetLocation = @"C:\Users\karim\Documents\GitHub\FuzzyMatching\Solution\SimilarityMatching.Tests\TestData\largeDataset.csv";
-         
-           
+
+
             var sentenceToMatch = "take record";
             var storageOptions = new StorageOptions
             {
@@ -26,11 +25,11 @@ namespace FuzzyMatching.Tests.E2ETests
                 ContainerName = ""
             };
 
-          
+
 
             int[] sizes = new int[6] { 10, 100, 1000, 10000, 25000, 50000 };
 
-            return new TheoryData<int[],string, string, StorageOptions>
+            return new TheoryData<int[], string, string, StorageOptions>
             {
                 {
                     sizes,

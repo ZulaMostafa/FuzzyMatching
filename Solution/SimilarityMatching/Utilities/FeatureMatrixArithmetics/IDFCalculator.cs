@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FuzzyMatching.Core.Utilities.FeatureMatrixOperations
+namespace FuzzyMatching.Core.Utilities.FeatureMatrixArithmetics
 {
     public static class IDFCalculator
     {

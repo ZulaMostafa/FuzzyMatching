@@ -1,9 +1,6 @@
 ﻿using FuzzyMatching.Core.Factories;
 using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace FuzzyMatching.Tests.UnitTests
@@ -21,7 +18,7 @@ namespace FuzzyMatching.Tests.UnitTests
             IStorageService StorageService = StorageFactory.create(storageOptions);
 
 
-            return new TheoryData<int []  , IStorageService,int>
+            return new TheoryData<int[], IStorageService, int>
             {
                 {
                     array1D,
@@ -33,10 +30,10 @@ namespace FuzzyMatching.Tests.UnitTests
 
         [Theory]
         [MemberData(nameof(TestLocalStorageServiceArrays))]
-        public void TestLocalStorageService (int [] array1D, IStorageService StorageService,int length)
+        public void TestLocalStorageService(int[] array1D, IStorageService StorageService, int length)
         {
             StorageService.StoreBinaryObject(array1D, "1D_array", "");
-            var LoadedArray = StorageService.LoadBinaryObject<int []>( "1D_array", "");
+            var LoadedArray = StorageService.LoadBinaryObject<int[]>("1D_array", "");
             for (int i = 0; i < length; i++)
             {
                 Assert.Equal(array1D[i], LoadedArray[i]);

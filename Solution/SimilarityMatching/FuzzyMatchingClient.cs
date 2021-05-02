@@ -1,10 +1,9 @@
-﻿using FuzzyMatching.Core.Adapters;
-using FuzzyMatching.Core.Factories;
+﻿using FuzzyMatching.Core.Factories;
 using FuzzyMatching.Core.Services;
+using FuzzyMatching.Core.Utilities.ModelConverters;
 using FuzzyMatching.Definitions;
 using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -29,7 +28,7 @@ namespace FuzzyMatching.Core
             // create feature matrix
             var processedDataset = PreprocessorClient.PreprocessDataset(dataset);
             temp = processedDataset.IDFVector;
-            var storedDataset = ObjectsAdapter.ProcessedToStored(processedDataset);
+            var storedDataset = ProcessedDatasetModelConverter.ProcessedToStored(processedDataset);
             // store preprocessed data
             StorageService.StoreBinaryObject(storedDataset, datasetName + "_PreProcessed", relativeDirectory);
             StorageService.StoreBinaryObject(dataset, datasetName + "_Dataset", relativeDirectory);
@@ -44,7 +43,7 @@ namespace FuzzyMatching.Core
                 // try to get the preprocessed dataset
                 var storedDataset = StorageService.LoadBinaryObject<StoredProcessedDataset>(datasetName + "_PreProcessed", relativeDirectory);
                 var dataset = StorageService.LoadBinaryObject<List<string>>(datasetName + "_Dataset", relativeDirectory);
-                var processedDataset = ObjectsAdapter.StoredToProcessed(storedDataset);
+                var processedDataset = ProcessedDatasetModelConverter.StoredToProcessed(storedDataset);
                 // run matching algorithm
                 return RuntimeClient.MatchSentence(sentence, processedDataset, dataset);
             }

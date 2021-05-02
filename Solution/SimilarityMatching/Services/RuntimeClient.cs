@@ -1,4 +1,5 @@
-﻿using FuzzyMatching.Core.Utilities.FeatureMatrixOperations;
+﻿using FuzzyMatching.Core.Utilities.FeatureMatrixArithmetics;
+using FuzzyMatching.Core.Utilities.MatrixArithmetics;
 using FuzzyMatching.Core.Utilities.MatrixOperations;
 using FuzzyMatching.Definitions.Models;
 using FuzzyMatching.Definitions.Services;

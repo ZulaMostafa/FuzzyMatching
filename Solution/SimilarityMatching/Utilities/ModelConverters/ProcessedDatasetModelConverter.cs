@@ -1,16 +1,14 @@
-﻿using FuzzyMatching.Definitions.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FuzzyMatching.Core.Utilities.MultiDimensionalArrays;
+using FuzzyMatching.Definitions.Models;
 
-namespace FuzzyMatching.Core.Adapters
+namespace FuzzyMatching.Core.Utilities.ModelConverters
 {
-    public static class ObjectsAdapter
+    public static class ProcessedDatasetModelConverter
     {
-        public static StoredProcessedDataset ProcessedToStored (ProcessedDataset processedDataset)
+        public static StoredProcessedDataset ProcessedToStored(ProcessedDataset processedDataset)
         {
             var storedDataset = new StoredProcessedDataset();
-            storedDataset.TFIDFMatrix = ArraysAdapter.Make1DArray(processedDataset.TFIDFMatrix);
+            storedDataset.TFIDFMatrix = ArrayDimensionConverter.Convert2DArrayMatrixTo1DArray(processedDataset.TFIDFMatrix);
             storedDataset.TFIDFMatrixAbsoluteValues = processedDataset.TFIDFMatrixAbsoluteValues;
             storedDataset.IDFVector = processedDataset.IDFVector;
             storedDataset.UniqueNGramsVector = processedDataset.UniqueNGramsVector;
@@ -18,14 +16,14 @@ namespace FuzzyMatching.Core.Adapters
             storedDataset.Width = processedDataset.TFIDFMatrix[0].Length;
             return storedDataset;
         }
-        public static ProcessedDataset StoredToProcessed (StoredProcessedDataset storedDataset)
+        public static ProcessedDataset StoredToProcessed(StoredProcessedDataset storedDataset)
         {
             var processedDataset = new ProcessedDataset();
-            processedDataset.TFIDFMatrix = ArraysAdapter.Make2DArray(storedDataset.TFIDFMatrix,storedDataset.Height,storedDataset.Width);
+            processedDataset.TFIDFMatrix = ArrayDimensionConverter.Convert1DArrayTo2DArrayMatrix(storedDataset.TFIDFMatrix, storedDataset.Height, storedDataset.Width);
             processedDataset.TFIDFMatrixAbsoluteValues = storedDataset.TFIDFMatrixAbsoluteValues;
             processedDataset.IDFVector = storedDataset.IDFVector;
             processedDataset.UniqueNGramsVector = storedDataset.UniqueNGramsVector;
-       
+
             return processedDataset;
         }
 
