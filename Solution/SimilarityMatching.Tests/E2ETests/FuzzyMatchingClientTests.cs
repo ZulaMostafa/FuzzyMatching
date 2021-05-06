@@ -15,7 +15,7 @@ namespace FuzzyMatching.Tests.E2ETests
         {
             // prepare input
             var datasetLocation = @"C:\Users\karim\Documents\GitHub\FuzzyMatching\Solution\SimilarityMatching.Tests\TestData\largeDataset.csv";
-            var dataset = ReadDatasetFromCSV(datasetLocation,10);
+            var dataset = ReadDatasetFromCSV(datasetLocation);
             var randomSentenceIndex = 5;
             var sentenceToMatch = dataset[randomSentenceIndex];
             var storageOptions = new StorageOptions

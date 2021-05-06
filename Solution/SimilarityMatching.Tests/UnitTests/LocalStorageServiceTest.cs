@@ -1,5 +1,6 @@
 ﻿using FuzzyMatching.Core.Factories;
 using FuzzyMatching.Definitions.Models;
+using FuzzyMatching.Definitions.Models.Enums;
 using FuzzyMatching.Definitions.Services;
 using Xunit;
 
@@ -12,7 +13,7 @@ namespace FuzzyMatching.Tests.UnitTests
             int[] array1D = new int[5] { 99, 98, 92, 97, 95 };
             var storageOptions = new StorageOptions();
             // local storage
-            storageOptions.StorageType = FuzzyMatching.Definitions.Models.Enums.StorageType.Local;
+            storageOptions.StorageType = StorageType.Local;
             storageOptions.BaseDirectory = @"C:\Users\karim\Documents\GitHub\FuzzyMatching";
             IStorageService StorageService = StorageFactory.create(storageOptions);
 

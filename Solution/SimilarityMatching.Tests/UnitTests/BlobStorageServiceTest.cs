@@ -1,5 +1,6 @@
 ﻿using FuzzyMatching.Core.Factories;
 using FuzzyMatching.Definitions.Models;
+using FuzzyMatching.Definitions.Models.Enums;
 using FuzzyMatching.Definitions.Services;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,8 @@ namespace FuzzyMatching.Tests.UnitTests
             var storageOptions = new StorageOptions();
             // Blob storage
 
-            storageOptions.StorageType = FuzzyMatching.Definitions.Models.Enums.StorageType.Blob;
-            storageOptions.ConnectionString = "DefaultEndpointsProtocol=https;AccountName=fuzzytest12;AccountKey=p3h+kwNL/2V5Hx7yn73NxX6b0Nkx9elcu6CoR65Hojf3qYO6Iq23Vd9GjTkWLLNieYMKJ7alWYKpLL+6o28Z6Q==;EndpointSuffix=core.windows.net";
+            storageOptions.StorageType = StorageType.Blob;
+            storageOptions.ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING_BLOB");
             storageOptions.ContainerName = "container";
             IStorageService StorageService = StorageFactory.create(storageOptions);
 

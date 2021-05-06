@@ -20,7 +20,7 @@ namespace FuzzyMatching.Tests.E2ETests
             var storageOptions = new StorageOptions
             {
                 StorageType = StorageType.Local,
-                BaseDirectory = @"C:\Users\karim\Documents\GitHub\FuzzyMatching",
+                BaseDirectory = @".",
                 ConnectionString = "",
                 ContainerName = ""
             };

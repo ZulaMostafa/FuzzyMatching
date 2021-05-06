@@ -30,8 +30,8 @@ namespace FuzzyMatching.Core
             temp = processedDataset.IDFVector;
             var storedDataset = ProcessedDatasetModelConverter.ProcessedToStored(processedDataset);
             // store preprocessed data
-            StorageService.StoreBinaryObjectAsync(storedDataset, datasetName + "_PreProcessed", relativeDirectory);
-            StorageService.StoreBinaryObjectAsync(dataset, datasetName + "_Dataset", relativeDirectory);
+            StorageService.StoreBinaryObjectAsync(storedDataset, datasetName + "_PreProcessed", relativeDirectory).GetAwaiter().GetResult();
+            StorageService.StoreBinaryObjectAsync(dataset, datasetName + "_Dataset", relativeDirectory).GetAwaiter().GetResult();
         }
 
 
