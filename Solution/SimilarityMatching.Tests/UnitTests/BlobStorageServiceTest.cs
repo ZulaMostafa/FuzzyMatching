@@ -13,13 +13,14 @@ namespace FuzzyMatching.Tests.UnitTests
     {
         public static TheoryData TestBlobStorageServiceArrays()
         {
-            int[] array1D = new int[5] { 99, 98, 92, 97, 95 };
-            var storageOptions = new StorageOptions();
-            // Blob storage
-
-            storageOptions.StorageType = StorageType.Blob;
-            storageOptions.ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING_BLOB");
-            storageOptions.ContainerName = "container";
+            var array1D = new int[5] { 99, 98, 92, 97, 95 };
+            var storageOptions = new StorageOptions
+            {
+                StorageType = StorageType.Blob,
+                BaseDirectory = @".",
+                ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING_BLOB"),
+                ContainerName = "container"
+            };
             IStorageService StorageService = StorageFactory.create(storageOptions);
 
 

@@ -20,9 +20,9 @@ namespace FuzzyMatching.Tests.E2ETests
             var sentenceToMatch = dataset[randomSentenceIndex];
             var storageOptions = new StorageOptions
             {
-                StorageType = StorageType.Blob,
+                StorageType = StorageType.Local,
                 BaseDirectory = @".",
-                ConnectionString = "DefaultEndpointsProtocol=https;AccountName=fuzzytest12;AccountKey=p3h+kwNL/2V5Hx7yn73NxX6b0Nkx9elcu6CoR65Hojf3qYO6Iq23Vd9GjTkWLLNieYMKJ7alWYKpLL+6o28Z6Q==;EndpointSuffix=core.windows.net",
+                ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING_BLOB"),
                 ContainerName = "container"
             };
 
