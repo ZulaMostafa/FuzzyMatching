@@ -3,6 +3,7 @@ using ProtoBuf;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
 {
@@ -19,7 +20,7 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             _targetDirectory = targetDirectory;
         }
 
-        public void StoreBinaryObject<T>(T data, string fileName, string relativePath)
+        public async Task StoreBinaryObjectAsync<T>(T data, string fileName, string relativePath)
         {
             try
             {
@@ -34,15 +35,15 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
         }
 
-        public T LoadBinaryObject<T>(string fileName, string relativePath)
+        public async Task<T> LoadBinaryObjectAsync<T>(string fileName, string relativePath)
         {
             try
             {
                 var fullPath = Path.Combine(_targetDirectory, relativePath, fileName);
                 var file = File.OpenRead(fullPath);
-                var result = Serializer.Deserialize<T>(file);
+                var result =  Serializer.Deserialize<T>(file);
                 file.Close();
-                return result;
+                return  result;
             }
             catch (Exception e)
             {
@@ -50,10 +51,10 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
         }
 
-        public string[] ListPreprocessedDatasets(string Location)
+        public async Task<string[]> ListPreprocessedDatasetsAsync(string Location)
         {
             string folderPath = Path.Combine(_targetDirectory, Location);
-            return Directory.GetFiles(folderPath).Select(i => Path.GetFileName(i)).ToArray();
+            return  Directory.GetFiles(folderPath).Select(i => Path.GetFileName(i)).ToArray();
         }
     }
 }

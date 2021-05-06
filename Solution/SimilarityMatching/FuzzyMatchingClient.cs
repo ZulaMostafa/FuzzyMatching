@@ -30,8 +30,8 @@ namespace FuzzyMatching.Core
             temp = processedDataset.IDFVector;
             var storedDataset = ProcessedDatasetModelConverter.ProcessedToStored(processedDataset);
             // store preprocessed data
-            StorageService.StoreBinaryObject(storedDataset, datasetName + "_PreProcessed", relativeDirectory);
-            StorageService.StoreBinaryObject(dataset, datasetName + "_Dataset", relativeDirectory);
+            StorageService.StoreBinaryObjectAsync(storedDataset, datasetName + "_PreProcessed", relativeDirectory);
+            StorageService.StoreBinaryObjectAsync(dataset, datasetName + "_Dataset", relativeDirectory);
         }
 
 
@@ -41,8 +41,8 @@ namespace FuzzyMatching.Core
             try
             {
                 // try to get the preprocessed dataset
-                var storedDataset = StorageService.LoadBinaryObject<StoredProcessedDataset>(datasetName + "_PreProcessed", relativeDirectory);
-                var dataset = StorageService.LoadBinaryObject<List<string>>(datasetName + "_Dataset", relativeDirectory);
+                var storedDataset = StorageService.LoadBinaryObjectAsync<StoredProcessedDataset>(datasetName + "_PreProcessed", relativeDirectory).GetAwaiter().GetResult();
+                var dataset = StorageService.LoadBinaryObjectAsync<List<string>>(datasetName + "_Dataset", relativeDirectory).GetAwaiter().GetResult();
                 var processedDataset = ProcessedDatasetModelConverter.StoredToProcessed(storedDataset);
                 // run matching algorithm
                 return RuntimeClient.MatchSentence(sentence, processedDataset, dataset);
@@ -52,11 +52,11 @@ namespace FuzzyMatching.Core
                 try
                 {
                     // load original dataset
-                    var dataset = StorageService.LoadBinaryObject<List<string>>(datasetName + "_Dataset", relativeDirectory);
+                    var dataset = StorageService.LoadBinaryObjectAsync<List<string>>(datasetName + "_Dataset", relativeDirectory).GetAwaiter().GetResult();
                     // run preprocessing
                     PreprocessDataset(dataset, datasetName, relativeDirectory);
                     // load preprocessed
-                    var preprocessedDataset = StorageService.LoadBinaryObject<ProcessedDataset>(datasetName + "_PreProcessed", relativeDirectory);
+                    var preprocessedDataset = StorageService.LoadBinaryObjectAsync<ProcessedDataset>(datasetName + "_PreProcessed", relativeDirectory).GetAwaiter().GetResult();
                     // run matching algorithm
                     return RuntimeClient.MatchSentence(sentence, preprocessedDataset, dataset);
                 }
@@ -70,7 +70,7 @@ namespace FuzzyMatching.Core
 
         public string[] ListProcessedDatasets(string directory)
         {
-            return StorageService.ListPreprocessedDatasets(directory);
+            return StorageService.ListPreprocessedDatasetsAsync(directory).GetAwaiter().GetResult();
         }
     }
 }

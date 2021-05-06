@@ -14,8 +14,8 @@ namespace FuzzyMatching.Core.Factories
             {
                 case StorageType.Local:
                     return new LocalStorageService(storageOptions.BaseDirectory);
-                //case StorageType.Blob:
-                //    return new BlobStorageService(storageOptions.ConnectionString, storageOptions.ContainerName);
+                case StorageType.Blob:
+                    return new BlobStorageService(storageOptions.ConnectionString, storageOptions.ContainerName);
                 default:
                     throw new Exception("storage option not supported!");
             }

@@ -15,15 +15,15 @@ namespace FuzzyMatching.Tests.E2ETests
         {
             // prepare input
             var datasetLocation = @"C:\Users\karim\Documents\GitHub\FuzzyMatching\Solution\SimilarityMatching.Tests\TestData\largeDataset.csv";
-            var dataset = ReadDatasetFromCSV(datasetLocation);
+            var dataset = ReadDatasetFromCSV(datasetLocation,10);
             var randomSentenceIndex = 5;
             var sentenceToMatch = dataset[randomSentenceIndex];
             var storageOptions = new StorageOptions
             {
-                StorageType = StorageType.Local,
+                StorageType = StorageType.Blob,
                 BaseDirectory = @"C:\Users\karim\Documents\GitHub\FuzzyMatching",
-                ConnectionString = "",
-                ContainerName = ""
+                ConnectionString = "DefaultEndpointsProtocol=https;AccountName=fuzzytest12;AccountKey=p3h+kwNL/2V5Hx7yn73NxX6b0Nkx9elcu6CoR65Hojf3qYO6Iq23Vd9GjTkWLLNieYMKJ7alWYKpLL+6o28Z6Q==;EndpointSuffix=core.windows.net",
+                ContainerName = "container"
             };
 
             // expected

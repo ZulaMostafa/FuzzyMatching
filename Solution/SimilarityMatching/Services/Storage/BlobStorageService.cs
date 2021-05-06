@@ -1,6 +1,8 @@
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using FuzzyMatching.Definitions.Services;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
 {
-    public class BlobStorageService //: IStorageService
+    public class BlobStorageService : IStorageService
     {
         private readonly BlobContainerClient _blobContainerClient;
 
@@ -30,7 +32,47 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
         }
 
-        public async Task<string[]> ListFilesAsync()
+      
+
+
+
+        public async Task StoreBinaryObjectAsync<T>(T data, string fileName, string relativePath)
+        {
+            try
+            {
+                var fullPath = Path.Combine(relativePath, fileName);
+                BlobClient blobClient = _blobContainerClient.GetBlobClient(fullPath);
+                using (MemoryStream stream = new MemoryStream())
+                {
+
+                    Serializer.Serialize(stream, data);
+                    stream.Position = 0;
+                    await blobClient.UploadAsync(stream, overwrite: true);
+                    
+                }
+            }
+            catch (Exception e)
+            {
+                throw new FileNotFoundException(e.Message);
+            }
+        }
+
+        public async Task<T> LoadBinaryObjectAsync<T>(string fileName, string relativePath)
+        {
+            try
+            {
+                var fullPath = Path.Combine( relativePath, fileName);
+                BlobClient blobClient = _blobContainerClient.GetBlobClient(fullPath);
+                BlobDownloadInfo download = await blobClient.DownloadAsync();
+                return Serializer.Deserialize<T>( download.Content);
+            }
+            catch (Exception e)
+            {
+                throw new FileNotFoundException(e.Message);
+            }
+        }
+
+        public async Task<string[]> ListPreprocessedDatasetsAsync(string Location)
         {
             var blobs = _blobContainerClient.GetBlobsAsync();
             List<string> blobNames = new List<string>();
@@ -40,101 +82,6 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
             }
             return blobNames.ToArray();
         }
-
-        public async Task<Stream> ReadFileAsync(string fileName)
-        {
-            if (await FileExists(fileName))
-            {
-                BlobClient blobClient = _blobContainerClient.GetBlobClient(fileName);
-                BlobDownloadInfo download = await blobClient.DownloadAsync();
-                return download.Content;
-            }
-            else
-            {
-                throw new FileNotFoundException();
-                //throw new Definitions.Exceptions.Storage.FileNotFoundException(fileName);
-            }
-        }
-
-        public async Task<string> ReadFileAsStringAsync(string fileName)
-        {
-            if (await FileExists(fileName))
-            {
-                BlobClient blobClient = _blobContainerClient.GetBlobClient(fileName);
-                BlobDownloadInfo download = await blobClient.DownloadAsync();
-                using (StreamReader sr = new StreamReader(download.Content))
-                {
-                    return sr.ReadToEnd();
-                }
-            }
-            else
-            {
-                throw new FileNotFoundException();
-                //throw new Definitions.Exceptions.Storage.FileNotFoundException(fileName);
-            }
-        }
-
-        public async Task StoreDataAsync(Object data, string fileName)
-        {
-            BlobClient blobClient = _blobContainerClient.GetBlobClient(fileName);
-            using (MemoryStream stream = new MemoryStream())
-            {
-                using (StreamWriter sw = new StreamWriter(stream))
-                {
-                    sw.Write(data);
-                    sw.Flush();
-                    stream.Position = 0;
-                    await blobClient.UploadAsync(stream, overwrite: true);
-                }
-            }
-        }
-
-        public async Task<Stream> ReadFromAbsolutePathAsync(string fileName, string location)
-        {
-            var relativePath = Path.Combine(fileName, location);
-            return await ReadFileAsync(relativePath);
-
-        }
-
-        public async Task<bool> FileExists(string fileName)
-        {
-            return await Task.Run(() =>
-            {
-                return _blobContainerClient.GetBlobClient(fileName).Exists();
-            });
-        }
-
-
-
-        public async Task StoreDataToDirectoryAsync(Object data, string location, string fileName)
-        {
-            var relativePath = Path.Combine(location, fileName);
-            await StoreDataAsync(data, relativePath);
-        }
-
-
-
-
-
-        public async Task StoreBinaryObjectAsync(Object data, string fileName, string location)
-        {
-            await StoreDataToDirectoryAsync(data, location, fileName);
-            return;
-        }
-
-
-        public async Task<string[]> ListPreprocessedDatasetsAsync(string location)
-        {
-            return await ListFilesAsync();
-
-        }
-
-        public async Task<Object> LoadBinaryObjectAsync(string name, string location)
-        {
-            return await ReadFromAbsolutePathAsync(name, location);
-
-        }
-
 
 
     }
