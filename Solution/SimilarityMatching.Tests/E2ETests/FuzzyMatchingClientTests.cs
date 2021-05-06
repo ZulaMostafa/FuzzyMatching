@@ -21,7 +21,7 @@ namespace FuzzyMatching.Tests.E2ETests
             var storageOptions = new StorageOptions
             {
                 StorageType = StorageType.Blob,
-                BaseDirectory = @"C:\Users\karim\Documents\GitHub\FuzzyMatching",
+                BaseDirectory = @".",
                 ConnectionString = "DefaultEndpointsProtocol=https;AccountName=fuzzytest12;AccountKey=p3h+kwNL/2V5Hx7yn73NxX6b0Nkx9elcu6CoR65Hojf3qYO6Iq23Vd9GjTkWLLNieYMKJ7alWYKpLL+6o28Z6Q==;EndpointSuffix=core.windows.net",
                 ContainerName = "container"
             };

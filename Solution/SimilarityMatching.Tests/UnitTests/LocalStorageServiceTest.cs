@@ -14,7 +14,7 @@ namespace FuzzyMatching.Tests.UnitTests
             var storageOptions = new StorageOptions();
             // local storage
             storageOptions.StorageType = StorageType.Local;
-            storageOptions.BaseDirectory = @"C:\Users\karim\Documents\GitHub\FuzzyMatching";
+            storageOptions.BaseDirectory = @".";
             IStorageService StorageService = StorageFactory.create(storageOptions);
 
 
