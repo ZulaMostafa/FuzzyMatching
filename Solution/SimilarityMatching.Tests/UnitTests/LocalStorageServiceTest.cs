@@ -16,10 +16,10 @@ namespace FuzzyMatching.Tests.UnitTests
             {
                 StorageType = StorageType.Local,
                 BaseDirectory = @".",
-                ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING_BLOB"),
+                ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING_BLOB", EnvironmentVariableTarget.Machine),
                 ContainerName = "container"
             };
-            IStorageService StorageService = StorageFactory.create(storageOptions);
+            var StorageService = StorageFactory.create(storageOptions);
 
 
             return new TheoryData<int[], IStorageService, int>

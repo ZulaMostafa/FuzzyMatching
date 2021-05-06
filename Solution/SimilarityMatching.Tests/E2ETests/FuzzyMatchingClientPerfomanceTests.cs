@@ -21,7 +21,7 @@ namespace FuzzyMatching.Tests.E2ETests
             {
                 StorageType = StorageType.Local,
                 BaseDirectory = @".",
-                ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING_BLOB"),
+                ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING_BLOB", EnvironmentVariableTarget.Machine),
                 ContainerName = "container"
             };
 
