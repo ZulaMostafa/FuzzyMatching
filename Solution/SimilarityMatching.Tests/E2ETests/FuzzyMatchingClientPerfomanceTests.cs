@@ -14,7 +14,7 @@ namespace FuzzyMatching.Tests.E2ETests
         public static TheoryData FuzzyMatchingClientTestData()
         {
             // prepare input
-            var datasetLocation = @"C:\Users\karim\Documents\GitHub\FuzzyMatching\Solution\SimilarityMatching.Tests\TestData\largeDataset.csv";
+            var datasetLocation = @".\TestData\largeDataset.csv";
 
 
             var sentenceToMatch = "take record";

@@ -43,7 +43,7 @@ namespace Microsoft.CogSLanguageUtilities.Core.Services.Storage
                 var file = File.OpenRead(fullPath);
                 var result =  Serializer.Deserialize<T>(file);
                 file.Close();
-                return  result;
+                return  await Task.FromResult(result);
             }
             catch (Exception e)
             {
