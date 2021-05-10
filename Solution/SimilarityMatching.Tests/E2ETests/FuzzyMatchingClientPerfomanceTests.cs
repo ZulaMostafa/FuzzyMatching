@@ -4,6 +4,7 @@ using FuzzyMatching.Definitions.Models.Enums;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace FuzzyMatching.Tests.E2ETests
@@ -42,7 +43,7 @@ namespace FuzzyMatching.Tests.E2ETests
 
         [Theory]
         [MemberData(nameof(FuzzyMatchingClientTestData))]
-        public void FuzzyMatchingClientTestAsync(int[] sizes, string datasetLocation, string sentenceToMatch, StorageOptions storageOptions)
+        public async Task FuzzyMatchingClientTestAsync(int[] sizes, string datasetLocation, string sentenceToMatch, StorageOptions storageOptions)
         {
             foreach (var size in sizes)
             {
@@ -53,11 +54,11 @@ namespace FuzzyMatching.Tests.E2ETests
 
                 // process dataset
                 var datasetName = "someDataset";
-                fuzzyMatchingClient.PreprocessDataset(dataset, datasetName);
+                await fuzzyMatchingClient.PreprocessDatasetAsync(dataset, datasetName);
 
                 DateTime start = DateTime.Now;
                 // runtime
-                var result = fuzzyMatchingClient.MatchSentence(sentenceToMatch, datasetName);
+                var result = fuzzyMatchingClient.MatchSentenceAsync(sentenceToMatch, datasetName).GetAwaiter().GetResult();
                 DateTime end = DateTime.Now;
                 TimeSpan ts = (end - start);
 

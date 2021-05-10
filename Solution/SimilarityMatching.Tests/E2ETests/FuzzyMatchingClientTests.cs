@@ -4,6 +4,7 @@ using FuzzyMatching.Definitions.Models.Enums;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 
@@ -14,7 +15,7 @@ namespace FuzzyMatching.Tests.E2ETests
         public static TheoryData FuzzyMatchingClientTestData()
         {
             // prepare input
-            var datasetLocation = @"C:\Users\karim\Documents\GitHub\FuzzyMatching\Solution\SimilarityMatching.Tests\TestData\largeDataset.csv";
+            var datasetLocation = @"C:\Users\karim\Documents\GitHub\FuzzyMatching\Solution\SimilarityMatching.Tests\TestData\NewsHeadlines.csv";
             var dataset = ReadDatasetFromCSV(datasetLocation);
             var randomSentenceIndex = 5;
             var sentenceToMatch = dataset[randomSentenceIndex];
@@ -47,17 +48,17 @@ namespace FuzzyMatching.Tests.E2ETests
 
         [Theory]
         [MemberData(nameof(FuzzyMatchingClientTestData))]
-        public void FuzzyMatchingClientTestAsync(List<string> dataset, string sentenceToMatch, StorageOptions storageOptions, MatchingResult expected)
+        public async Task FuzzyMatchingClientTestAsync(List<string> dataset, string sentenceToMatch, StorageOptions storageOptions, MatchingResult expected)
         {
             // create client
             var fuzzyMatchingClient = new FuzzyMatchingClient(storageOptions);
 
             // process dataset
             var datasetName = "someDataset";
-            fuzzyMatchingClient.PreprocessDataset(dataset, datasetName);
+           await fuzzyMatchingClient.PreprocessDatasetAsync(dataset, datasetName);
 
             // runtime
-            var result = fuzzyMatchingClient.MatchSentence(sentenceToMatch, datasetName);
+            var result = fuzzyMatchingClient.MatchSentenceAsync(sentenceToMatch, datasetName).GetAwaiter().GetResult();
 
             // assert
             Assert.Equal(result.ClosestSentence, expected.ClosestSentence);
