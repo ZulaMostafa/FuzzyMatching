@@ -22,4 +22,13 @@
 	  <ProjectReference Include="..\SimilarityMatching\FuzzyMatching.Core.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="TestData\CompanyNames.csv">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="TestData\NewsHeadlines.csv">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

@@ -15,13 +15,13 @@ namespace FuzzyMatching.Tests.E2ETests
         public static TheoryData FuzzyMatchingClientTestData()
         {
             // prepare input
-            var datasetLocation = @"C:\Users\karim\Documents\GitHub\FuzzyMatching\Solution\SimilarityMatching.Tests\TestData\NewsHeadlines.csv";
+            var datasetLocation = @".\TestData\NewsHeadlines.csv";
             var dataset = ReadDatasetFromCSV(datasetLocation);
             var randomSentenceIndex = 5;
             var sentenceToMatch = dataset[randomSentenceIndex];
             var storageOptions = new StorageOptions
             {
-                StorageType = StorageType.Local,
+                StorageType = StorageType.Blob,
                 BaseDirectory = @".",
                 ConnectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING_BLOB", EnvironmentVariableTarget.Machine),
                 ContainerName = "container"
