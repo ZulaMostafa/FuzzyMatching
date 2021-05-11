@@ -18,8 +18,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\FuzzyMatching.Core\FuzzyMatching.Core.csproj" />
 	  <ProjectReference Include="..\FuzzyMatching.Definitions\FuzzyMatching.Definitions.csproj" />
-	  <ProjectReference Include="..\SimilarityMatching\FuzzyMatching.Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
